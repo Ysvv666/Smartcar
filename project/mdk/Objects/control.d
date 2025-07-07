@@ -1,4 +1,4 @@
-./objects/main.o: ../USER/src/main.c \
+./objects/control.o: ../code/control.c ../code/control.h \
   ../../libraries/zf_common\zf_common_headfile.h \
   D:\program\51Keil\ARM\ARMCLANG\Bin\..\include\stdio.h \
   D:\program\51Keil\ARM\ARMCLANG\Bin\..\include\stdint.h \

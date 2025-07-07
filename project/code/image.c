@@ -1,5 +1,4 @@
 #include "image.h"
-#include <stdint.h>
 #define GrayScale 256      // 灰度级范围
 
 // 大津法计算阈值

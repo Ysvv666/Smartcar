@@ -19,8 +19,13 @@ typedef struct {
 	float OutMax;
 	float OutMin;
 	
+	float Base_Speed;
+
 	float OutLeft;
 	float OutRight;
+
+	float OutEndMax;
+	float OutEndMin;
 } PID_t;
 
 void PID_Update(PID_t *p);

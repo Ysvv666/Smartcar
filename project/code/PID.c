@@ -26,16 +26,16 @@ void PID_Update(PID_t *p)
 //*********************************************
 	
 //差速大法***************************************
-	p->OutLeft=25+(p->Out);
-	p->OutRight=25-(p->Out);
+	p->OutLeft =p->Base_Speed+(p->Out);
+	p->OutRight=p->Base_Speed-(p->Out);
 //*********************************************
 	
-//输出限幅***************************************
-	if (p->OutLeft >  100){p->OutLeft  = 100;}
-	if (p->OutLeft < -100){p->OutLeft  =-100;}
+//最终输出限幅***************************************
+	if (p->OutLeft >p->OutEndMax){p->OutLeft  =p->OutEndMax;}
+	if (p->OutLeft <p->OutEndMin){p->OutLeft  =p->OutEndMin;}
 	
-	if (p->OutRight>  100){p->OutRight = 100;}
-	if (p->OutRight< -100){p->OutRight =-100;}
+	if (p->OutRight>p->OutEndMax){p->OutRight =p->OutEndMax;}
+	if (p->OutRight<p->OutEndMin){p->OutRight =p->OutEndMin;}
 //*********************************************
 }
 
