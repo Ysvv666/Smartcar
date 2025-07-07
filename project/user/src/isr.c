@@ -1,7 +1,4 @@
 #include "isr.h"
-extern int32 encoder1;
-extern int32 encoder2;
-
 //-------------------------------------------------------------------------------------------------------------------
 // 函数简介     TIM1 的定时器更新中断服务函数 启动 .s 文件定义 不允许修改函数名称
 //              默认优先级 修改优先级使用 interrupt_set_priority(TIM1_UP_IRQn, 1);
@@ -90,75 +87,62 @@ void TIM5_IRQHandler (void)
 // 函数简介     TIM6 的定时器中断服务函数 启动 .s 文件定义 不允许修改函数名称
 //              默认优先级 修改优先级使用 interrupt_set_priority(TIM6_IRQn, 1);
 //-------------------------------------------------------------------------------------------------------------------
+extern int32 encoder1;
+extern int32 encoder2;
+extern int32 en_speed1;
+extern int32 en_speed2;
+extern int32 en_location1;
+extern int32 en_location2;
 void TIM6_IRQHandler (void)
 {
-    // 此处编写用户代码
-	encoder1=encoder_get_count(TIM3_ENCODER);
-	encoder_clear_count(TIM3_ENCODER);
-	encoder2=-encoder_get_count(TIM4_ENCODER);
-	encoder_clear_count(TIM4_ENCODER);
-    // 此处编写用户代码
-    TIM6->SR &= ~TIM6->SR;                                                      // 清空中断状态
+//************编码器1(左轮)**************
+		encoder1=encoder_get_count(TIM3_ENCODER);
+		en_speed1=encoder1;
+		en_location1+=encoder1;
+		encoder_clear_count(TIM3_ENCODER);
+//************************************
+	
+//************编码器2(右轮)**************
+		encoder2=encoder_get_count(TIM4_ENCODER);
+		en_speed2=(-encoder2);//-是因为极性问题
+		en_location2+=(-encoder2);//-是因为极性问题
+		encoder_clear_count(TIM4_ENCODER);
+//************************************
+	
+    TIM6->SR &= ~TIM6->SR;// 清空中断状态                                                
 }
 
 //-------------------------------------------------------------------------------------------------------------------
 // 函数简介     TIM7 的定时器中断服务函数 启动 .s 文件定义 不允许修改函数名称
 //              默认优先级 修改优先级使用 interrupt_set_priority(TIM7_IRQn, 1);
 //-------------------------------------------------------------------------------------------------------------------
+extern char Bias_finish_flag;
+extern int8_t filtered_offset;
+extern PID_t Outer;
+extern PID_t Inner;
+
 void TIM7_IRQHandler (void)
 {
-    // 此处编写用户代码
-///*定义静态变量（默认初值为0，函数退出后保留值和存储空间）*/
-////	  static uint16_t Count1,     //内环的计次分频
-//		static uint16_t Count2;		  //外环的计次分频
-//		
-//		/*外环计次分频*/
-//		Count2 ++;				//计次自增
-//		if (Count2 >= 40)		//如果计次40次，则if成立，即if每隔40ms进一次
-//		{
-//			Count2 = 0;			//计次清零，便于下次计次
-//			CCD_Collect_Data();		 
-//			Find_CCD_Zhongzhi();
-//			/*以下进行外环PID控制*/
-//			/*外环获取实际值*/
-//			Outer.Actual = CCD_Zhongzhi;		//外环为位置环，实际值为位置值
-//			/*PID计算及结构体变量值更新*/
-//			PID_Update(&Outer);			//调用封装好的函数，一步完成PID计算和更新
-//			/*外环执行控制*/
-//			/*外环的输出值作用于内环的目标值，组成串级PID结构*/
-////          Inner.Target = Outer.Out;**************先不用编码器 单环控制****************************
-//			Motor_Left_PWM(Outer.OutLeft);
-//			Motor_Right_PWM(Outer.OutRight);
+		if(Bias_finish_flag==1){	
+			Outer.Actual = filtered_offset;		//外环为位置环，实际值为位置值
+/*PID计算及结构体变量值更新*/
+			PID_Update(&Outer);			//调用封装好的函数，一步完成PID计算和更新
+/*外环的输出值作用于内环的目标值，组成串级PID结构*/
+//      Inner.Target = Outer.Out;*************先不用编码器 单环控制***************
+			Motor_Left_PWM(Outer.OutLeft);
+			Motor_Right_PWM(Outer.OutRight);
+			Bias_finish_flag=0;
+		}
+/*内环获取实际值*/
+//		Inner.Actual= (en_speed1+en_speed2)/2;		//内环为速度环，实际值为速度值
+/*PID计算及结构体变量值更新*/
+//		PID_Update(&Inner);			//调用封装好的函数，一步完成PID计算和更新
+/*内环输出值给到电机PWM*/
+//	  Motor_Left_PWM(Inner.OutLeft);
+//	  Motor_Right_PWM(Inner.OutRight);
 //		}
-////		/*内环计次分频*/
-////		Count1 ++;				//计次自增
-////		if (Count1 >= 40)		//如果计次40次，则if成立，即if每隔40ms进一次
-////		{
-////			Count1 = 0;			//计次清零，便于下次计次
-////			/*获取实际速度值和实际位置值*/
-////			/*Encoder_Get函数，可以获取两次读取编码器的计次值增量*/
-////			/*此值正比于速度，所以可以表示速度，但它的单位并不是速度的标准单位*/
-////			/*此处每隔40ms获取一次计次值增量，电机旋转一周的计次值增量约为408*/
-////			/*因此如果想转换为标准单位，比如转/秒*/
-////			/*则可将此句代码改成Speed = Encoder_Get() / 408.0 / 0.04;*/
-////			Speed = Encoder_Get();		//获取编码器增量，得到实际速度
-///***********这里得到的速度还需要线性变换成0~100，不然是错的********************/		
-////			/*以下进行内环PID控制*/
-////			/*内环获取实际值*/
-////			Inner.Actual= Speed;		//内环为速度环，实际值为速度值
-////			/*PID计算及结构体变量值更新*/
-////			PID_Update(&Inner);			//调用封装好的函数，一步完成PID计算和更新
-////			/*内环执行控制*/
-////			/*内环输出值给到电机PWM*/
-////	        Motor_Left_PWM(Inner.OutLeft);
-////	        Motor_Right_PWM(Inner.OutRight);
-////		}
-////电机控制示例*****************************************
-				Motor_Left_PWM(15);
-				Motor_Right_PWM(15);
-//*************************************************
-
-    // 此处编写用户代码
+		
+   // 此处编写用户代码
     TIM7->SR &= ~TIM7->SR;                                                      // 清空中断状态
 }
 

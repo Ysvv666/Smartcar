@@ -5,6 +5,8 @@
 
 int OtsuThreshold(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int height);
 void binarizeImage(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int height, int threshold);
+int8_t ScanLineCenter(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int height);
+int8_t FilterOffset(int8_t offset);
 
 
 //void sobelAutoThreshold(const uint8 image_mt[MT9V03X_H/2][MT9V03X_W], uint8 target[MT9V03X_H/2][MT9V03X_W]);

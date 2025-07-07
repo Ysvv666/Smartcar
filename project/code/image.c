@@ -57,9 +57,125 @@ void binarizeImage(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int hei
         }
     }
 }
+int8_t ScanLineCenter(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int height){
+    int32_t line_sum = 0;  // 线条像素x坐标总和
+    int32_t line_count = 0;  // 线条像素数量
+    
+    // 从底部向上扫描（取最后10行平均）
+    int scan_lines = 10;
+    int start_line = height - scan_lines;
+    
+    for (int i = start_line; i < height; i++){
+       for (int j = 0; j < width; j++){
+          if (image[i][j] == 255){  // 线条像素
+          // 八邻域判断：确保不是孤立点
+            int neighbor_count = 0;
+            for (int ni = -1; ni <= 1; ni++) {
+                for (int nj = -1; nj <= 1; nj++) {
+                    if (ni == 0 && nj == 0) continue;  // 跳过中心像素
+                    int ni_idx = i + ni;
+                    int nj_idx = j + nj;
+                    if (ni_idx >= 0 && ni_idx < height && nj_idx >= 0 && nj_idx < width){
+                      if (image[ni_idx][nj_idx] == 255) {
+                         neighbor_count++;
+                         break;  // 只要有一个邻域是线条就保留
+                      }
+									  }
+							  }
+             }
+             if (neighbor_count > 0) {  // 非孤立点
+                    line_sum += j;
+                    line_count++;
+             }
+          }
+       }
+    }
+    
+    // 计算中心偏移（像素坐标范围0-187，中心为94）
+    if (line_count == 0) return 0;  // 未检测到线条，返回中心
+    int center = line_sum / line_count;
+    return (int8_t)(center - 94);  // 转换为-94到+94的偏移量
+}
+//中值滤波算法***********************************************
+// 对连续5次的偏移量进行中值滤波
+#define FILTER_DEPTH 5
+static int8_t offset_buffer[FILTER_DEPTH] = {0};
+static uint8_t buffer_idx = 0;
 
+int8_t FilterOffset(int8_t offset) {
+    offset_buffer[buffer_idx] = offset;
+    buffer_idx = (buffer_idx + 1) % FILTER_DEPTH;
+    
+    // 简单排序取中值
+    int8_t temp[FILTER_DEPTH];
+    memcpy(temp, offset_buffer, FILTER_DEPTH * sizeof(int8_t));
+    
+    // 冒泡排序
+    for (int i = 0; i < FILTER_DEPTH - 1; i++) {
+        for (int j = 0; j < FILTER_DEPTH - i - 1; j++) {
+            if (temp[j] > temp[j + 1]) {
+                int8_t tmp = temp[j];
+                temp[j] = temp[j + 1];
+                temp[j + 1] = tmp;
+            }
+        }
+    }
+    
+    return temp[FILTER_DEPTH / 2];  // 返回中值
+}
 //*******************************以下是参考网上开源的代码***********************************
+/*
 
+////索贝尔卷积
+imag [cam_w][cam_h]原图像数组
+imag1[cam_w][cam_h]处理后图像数组
+
+180mhz 主频lpcdan片机处理60*120图像实测7.2ms
+如果需要更快的处理速度可选择局部处理提高速度
+
+
+
+//#define cam_h  60   //高度（行）
+//#define cam_w  120  //宽度（列）
+
+void sobel(uint8_t imag[cam_h][cam_w],uint8_t imag1[cam_h][cam_w])
+{
+	int tempx=0,tempy=0,temp=0,i=0,j=0;
+	for(i=1;i <cam_h-1; i++)
+		{
+		  for(j=1;j<cam_w-1;j++)
+			{
+        				
+				tempx=(-  imag[i-1][j-1])
+						 +(-2*imag[i  ][j-1])
+						 +(-  imag[i+1][j-1])
+						 +(   imag[i-1][j+1])
+				     +( 2*imag[i  ][j+1])
+				     +(   imag[i+1][j+1]);
+				if(tempx<0)
+					tempx=-tempx;
+				
+				tempy=(   imag[i+1][j-1])
+						 +( 2*imag[i+1][j  ])	
+						 +(   imag[i+1][j+1])
+						 +(-  imag[i-1][j-1])
+				     +(-2*imag[i-1][j  ])
+				     +(-  imag[i-1][j+1]);
+				if(tempy<0)
+					tempy=-tempy;
+				temp=tempx+tempy;
+				if(temp>255)
+					temp=255;
+					
+				imag1[i][j]=temp;
+				
+			}
+		}
+}
+
+
+temp=sqrt(tempx*tempx+tempy*tempy);
+*/
 ////索贝尔卷积
 //void sobelAutoThreshold(const uint8 image_mt[MT9V03X_H/2][MT9V03X_W], uint8 target[MT9V03X_H/2][MT9V03X_W])
 //{

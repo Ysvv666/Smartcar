@@ -10,12 +10,12 @@ PID_t Inner = {					//内环PID结构体变量，定义的时候同时给部分�
 };
 //外环为差速环
 PID_t Outer = {					//外环PID结构体变量，定义的时候同时给部分成员赋初值
-	.Kp = 0.5,					  //比例项权重
+	.Kp = 20,					  //比例项权重
 	.Ki = 0,					    //积分项权重
 	.Kd = 6,					    //微分项权重
 	.OutMax = 30,				  //PID_Out输出限幅的最大值
 	.OutMin = 0,			  	//PID_Out输出限幅的最小值
-	.Target = 188/2,      //目标值
+	.Target = 0,     		  //目标值(偏移量已经计算出的情况下)
 	
 	.Base_Speed = 15,			//基础速度
 	.OutEndMax = 30,			//最终输出限幅的最大值
@@ -24,8 +24,16 @@ PID_t Outer = {					//外环PID结构体变量，定义的时候同时给部分�
 // **************************** 变量区域 ****************************
 int32 encoder1;
 int32 encoder2;
-uint8_t Best_thrsod;
-int8 duty = 20;
+int32 en_speed1;
+int32 en_speed2;
+int32 en_location1;
+int32 en_location2;
+
+uint8_t Best_thrsod;    //八邻域得到的阈值
+int8_t line_offset;		  //中值偏差
+int8_t filtered_offset; //中值偏差(滤波后)
+char Bias_finish_flag=1;//偏差计算结束标志位
+
 // **************************** 代码区域 ****************************
 int main(void)
 {
@@ -56,7 +64,7 @@ int main(void)
 																  定时器5：电机PWM输出      */
 		pit_ms_init(TIM2_PIT, 10); 	 //定时器中断2用于按键处理      10ms
 		pit_ms_init(TIM6_PIT, 100);	 //定时器中断6用于编码器获取数据  100ms
-		pit_ms_init(TIM7_PIT, 1);	   //定时器中断7用于电机PID控制   1ms
+		pit_ms_init(TIM7_PIT, 20);	   //定时器中断7用于电机PID控制  20ms
 		interrupt_set_priority(TIM2_IRQn, 0);//设置中断2优先级
 		interrupt_set_priority(TIM6_IRQn, 1);//设置中断6优先级
     interrupt_set_priority(TIM7_IRQn, 2);//设置中断7优先级
@@ -72,13 +80,24 @@ int main(void)
           ips200_show_string(0, 120,"After_Handle:");//(0,136)显示处理后的图像
 					Best_thrsod=OtsuThreshold(image_copy,MT9V03X_W,MT9V03X_H);//大津法 动态阈值	
 					ips200_show_gray_image(0, 136, (const uint8 *)image_copy, MT9V03X_W, MT9V03X_H, MT9V03X_W, MT9V03X_H, Best_thrsod);
+//原图			ips200_show_gray_image(0, 136, (const uint8 *)image_copy, MT9V03X_W, MT9V03X_H, MT9V03X_W, MT9V03X_H, 0);
           mt9v03x_finish_flag = 0;
 //					__enable_irq();// 退出临界区（恢复中断）
-        }
+			}
+			ips200_show_string(0, 256,"Speed1:");
+			ips200_show_int(56, 256, en_speed1, 5);
+			ips200_show_string(0, 272,"Location1:");
+			ips200_show_int(80, 272, en_location1, 5);
+			ips200_show_string(0, 288,"Speed2:");
+			ips200_show_int(56, 288, en_speed2, 5);
+			ips200_show_string(0, 304,"Location2:");
+			ips200_show_int(80, 304, en_location2, 5);
+			}
 //*************************************************	
-			ips200_show_string(0, 256,"Encoder1:");
-			ips200_show_int(72, 256, encoder1, 5);
-			ips200_show_string(0, 272,"Encoder2:");
-			ips200_show_int(72, 272, encoder2, 5);
-    }
+//图像处理********************************************
+			line_offset=ScanLineCenter(image_copy,MT9V03X_W,MT9V03X_H);//中值
+      filtered_offset = FilterOffset(line_offset);	//滤波
+			Bias_finish_flag=1;
+			
+//*************************************************	
 }
