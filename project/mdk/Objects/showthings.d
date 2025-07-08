@@ -1,4 +1,4 @@
-./objects/menu.o: ../code/menu.c ../code/menu.h \
+./objects/showthings.o: ../code/Showthings.c ../code/showthings.h \
   ../../libraries/zf_common\zf_common_headfile.h \
   D:\program\51Keil\ARM\ARMCLANG\Bin\..\include\stdio.h \
   D:\program\51Keil\ARM\ARMCLANG\Bin\..\include\stdint.h \

@@ -109,6 +109,16 @@ void TIM6_IRQHandler (void)
 		encoder_clear_count(TIM4_ENCODER);
 //************************************
 	
+//************屏幕最底下显示数据************
+		ips200_show_string(0, 256,"Speed1:");
+		ips200_show_int(56, 256, en_speed1, 5);
+		ips200_show_string(0, 272,"Location1:");
+		ips200_show_int(80, 272, en_location1, 5);
+		ips200_show_string(0, 288,"Speed2:");
+		ips200_show_int(56, 288, en_speed2, 5);
+		ips200_show_string(0, 304,"Location2:");
+		ips200_show_int(80, 304, en_location2, 5);
+//*************************************
     TIM6->SR &= ~TIM6->SR;// 清空中断状态                                                
 }
 
@@ -116,34 +126,35 @@ void TIM6_IRQHandler (void)
 // 函数简介     TIM7 的定时器中断服务函数 启动 .s 文件定义 不允许修改函数名称
 //              默认优先级 修改优先级使用 interrupt_set_priority(TIM7_IRQn, 1);
 //-------------------------------------------------------------------------------------------------------------------
-extern char Bias_finish_flag;
-extern int8_t filtered_offset;
 extern PID_t Outer;
 extern PID_t Inner;
-
+extern uint8 center_line[120];//中线数组
+uint8_t ZhongZhi=94;
 void TIM7_IRQHandler (void)
 {
-		if(Bias_finish_flag==1){	
-			Outer.Actual = filtered_offset;		//外环为位置环，实际值为位置值
+	    ZhongZhi=(center_line[0]*0.3
+							 +center_line[1]*0.3
+							 +center_line[2]*0.2
+							 +center_line[3]*0.1
+							 +center_line[4]*0.1)/5;  //加权平均
+			Outer.Actual=center_line[0];		  //外环为位置环，实际值为位置值
 /*PID计算及结构体变量值更新*/
 			PID_Update(&Outer);			//调用封装好的函数，一步完成PID计算和更新
 /*外环的输出值作用于内环的目标值，组成串级PID结构*/
 //      Inner.Target = Outer.Out;*************先不用编码器 单环控制***************
 			Motor_Left_PWM(Outer.OutLeft);
 			Motor_Right_PWM(Outer.OutRight);
-			Bias_finish_flag=0;
-		}
 /*内环获取实际值*/
-//		Inner.Actual= (en_speed1+en_speed2)/2;		//内环为速度环，实际值为速度值
+//		  Inner.Actual= (en_speed1+en_speed2)/2;		//内环为速度环，实际值为速度值
 /*PID计算及结构体变量值更新*/
-//		PID_Update(&Inner);			//调用封装好的函数，一步完成PID计算和更新
+//		  PID_Update(&Inner);			//调用封装好的函数，一步完成PID计算和更新
 /*内环输出值给到电机PWM*/
-//	  Motor_Left_PWM(Inner.OutLeft);
-//	  Motor_Right_PWM(Inner.OutRight);
+//	    Motor_Left_PWM(Inner.OutLeft);
+//	    Motor_Right_PWM(Inner.OutRight);
 //		}
-		
+
    // 此处编写用户代码
-    TIM7->SR &= ~TIM7->SR;                                                      // 清空中断状态
+    TIM7->SR &= ~TIM7->SR;// 清空中断状态
 }
 
 //-------------------------------------------------------------------------------------------------------------------

@@ -445,6 +445,16 @@
               <FileType>5</FileType>
               <FilePath>..\code\control.h</FilePath>
             </File>
+            <File>
+              <FileName>Showthings.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\Showthings.c</FilePath>
+            </File>
+            <File>
+              <FileName>Showthings.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\Showthings.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
