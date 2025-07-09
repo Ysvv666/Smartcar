@@ -28,8 +28,8 @@ void PID_Update(PID_t *p)
 	
 //写了串级pid代码，差速大法就此告一段落	
 //差速大法***************************************
-	p->OutLeft =p->Base_Speed+(p->Out);
-	p->OutRight=p->Base_Speed-(p->Out)+2;//由于右轮电机会慢一点
+	p->OutLeft =p->Base_Speed-(p->Out);
+	p->OutRight=p->Base_Speed+(p->Out)+1;//由于右轮电机会慢一点
 //*********************************************
 	
 //最终输出限幅***************************************

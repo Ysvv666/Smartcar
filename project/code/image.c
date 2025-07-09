@@ -456,7 +456,7 @@ void image_draw_rectan(uint8(*image)[188])
 }
 uint8_t Best_thrsod;    //八邻域得到的阈值
 uint8_t ZhongZhi=94;
-
+char pid_flag;
 void image_process(void)
 {
 		uint16 i;
@@ -473,7 +473,7 @@ void image_process(void)
 //清零	
 		data_statics_l = 0;
 		data_statics_r = 0;
-	if (get_start_point(image_copy,120-1)){//找到起点了，再执行八领域，没找到就一直找 (不用while防止程序死循环，最好先放到赛道上)
+	  if(get_start_point(image_copy,120-1)){//找到起点了，再执行八领域，没找到就一直找 (不用while防止程序死循环，最好先放到赛道上)
 //八邻域提取边界				
 				search_l_r((uint16)USE_NUM, image_copy, 
 				&data_statics_l ,  &data_statics_r, 
@@ -513,14 +513,12 @@ void image_process(void)
 			ips200_draw_point(r_border[i],    i+Image_Down, RGB565_GREEN);   //显示起点 显示右边线
 		}
       //			ZhongZhi=center_line[5];
-			ZhongZhi=(center_line[0]
-						   +center_line[1]
-						   +center_line[2]
-						 	 +center_line[3]
-							 +center_line[4])/5;  //加权平均获取中值
+			ZhongZhi=center_line[0]*0.5
+						  +center_line[1]*0.3
+						  +center_line[2]*0.2;  //加权平均获取中值
 			ips200_show_string(188,32+Image_Down,"Middle");
 			ips200_show_uint  (188,48+Image_Down, ZhongZhi, 3);
-
+			pid_flag=1;
 }
 
 

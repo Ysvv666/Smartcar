@@ -113,11 +113,11 @@ void TIM6_IRQHandler (void)
 		ips200_show_string(0, 256,"Speed1:");
 		ips200_show_int(56, 256, en_speed1, 5);
 		ips200_show_string(0, 272,"Location1:");
-		ips200_show_int(80, 272, en_location1, 5);
+		ips200_show_int(80, 272, en_location1, 6);
 		ips200_show_string(0, 288,"Speed2:");
 		ips200_show_int(56, 288, en_speed2, 5);
 		ips200_show_string(0, 304,"Location2:");
-		ips200_show_int(80, 304, en_location2, 5);
+		ips200_show_int(80, 304, en_location2, 6);
 //*************************************
     TIM6->SR &= ~TIM6->SR;// 清空中断状态                                                
 }
@@ -132,15 +132,18 @@ extern PID_t Inner_Left;
 extern PID_t Inner_Right;
 extern uint8 center_line[120];//中线数组
 extern uint8_t ZhongZhi;
+extern char pid_flag;
 #define Base_Speed 2000
 void TIM7_IRQHandler (void)
-{
-			Outer.Actual=ZhongZhi;		        //外环为位置环，实际值为位置值
+{				
+		if(pid_flag==1){
+			Outer.Actual=ZhongZhi;		      			  //外环为位置环，实际值为位置值
 /*PID计算及结构体变量值更新*/
-			PID_Update(&Outer);			          //调用封装好的函数，一步完成PID计算和更新
-	
+			PID_Update(&Outer);			          //调用封装好的函数，一步完成PID计算和更新	
 		  Motor_Left_PWM (Outer.OutLeft );
 	    Motor_Right_PWM(Outer.OutRight);
+			pid_flag=0;
+		} 
 
 ///*外环的输出值作用于内环的目标值，组成串级PID结构*/
 //      Inner_Left.Target = Base_Speed + Outer.Out;

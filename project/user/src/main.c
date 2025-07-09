@@ -5,15 +5,15 @@ PID_t Outer = {					//外环PID结构体变量，定义的时候同时给部分�
 	.Kp = 1, 	  			  //比例项权重
 	.Ki = 0,					    //积分项权重
 	.Kd = 1,					    //微分项权重
-	.OutMax = 5,				  //PID_Out输出限幅的最大值
-	.OutMin = 0,			  	//PID_Out输出限幅的最小值
-	.Target = 188/2,     	//目标值
+	.OutMax = 10,				  //PID_Out输出限幅的最大值
+	.OutMin =-10,			  	//PID_Out输出限幅的最小值
+	.Target = 94,       	//目标值
 	
 	.Base_Speed = 10,			//基础速度
-	.OutEndMax = 15,			//最终输出限幅的最大值
+	.OutEndMax = 20,			//最终输出限幅的最大值
 	.OutEndMin = 0,       //最终输出限幅的最小值
 };
-
+/*双环pid串级控制（先不用，已注释）
 //外环为差速环
 //PID_t Outer = {					//外环PID结构体变量，定义的时候同时给部分成员赋初值
 //	.Kp = 15, 					  //比例项权重
@@ -24,23 +24,23 @@ PID_t Outer = {					//外环PID结构体变量，定义的时候同时给部分�
 //	.Target = 188/2,     	//目标值
 //};
 //内环为速度环
-PID_t Inner_Left = {					//内环PID结构体变量，定义的时候同时给部分成员赋初值
-	.Kp = 10,					    //比例项权重
-	.Ki = 0,					    //积分项权重
-	.Kd = 8,					    //微分项权重
-	.OutMax = 2500,				//输出限幅的最大值
-	.OutMin = 0,				//输出限幅的最小值
-};
-PID_t Inner_Right = {					//内环PID结构体变量，定义的时候同时给部分成员赋初值
-	.Kp = 10,					    //比例项权重
-	.Ki = 0,					    //积分项权重
-	.Kd = 8,					    //微分项权重
-	.OutMax = 2500,				//输出限幅的最大值
-	.OutMin = 0,				//输出限幅的最小值
-};
+//PID_t Inner_Left = {					//内环PID结构体变量，定义的时候同时给部分成员赋初值
+//	.Kp = 10,					    //比例项权重
+//	.Ki = 0,					    //积分项权重
+//	.Kd = 8,					    //微分项权重
+//	.OutMax = 2500,				//输出限幅的最大值
+//	.OutMin = 0,				//输出限幅的最小值
+//};
+//PID_t Inner_Right = {					//内环PID结构体变量，定义的时候同时给部分成员赋初值
+//	.Kp = 10,					    //比例项权重
+//	.Ki = 0,					    //积分项权重
+//	.Kd = 8,					    //微分项权重
+//	.OutMax = 2500,				//输出限幅的最大值
+//	.OutMin = 0,				//输出限幅的最小值
+//};
+*/
 // **************************** 代码区域 ****************************
-int main(void)
-{
+void All_Init(){
 //					__disable_irq();// 进入临界区（禁止中断）
 //					__enable_irq(); // 退出临界区（恢复中断）
     clock_init(SYSTEM_CLOCK_120M);                                              // 初始化芯片时钟 工作频率为 120MHz
@@ -76,6 +76,10 @@ int main(void)
     interrupt_set_priority(TIM7_IRQn, 2);//设置中断7优先级
 //显示菜单
     menu_display();
+}
+int main(void)
+{
+		All_Init();
     while(1)
     {		
 			if(mt9v03x_finish_flag){//MT9V03X_W为188 MT9V03X_H为120  	
