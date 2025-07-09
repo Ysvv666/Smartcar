@@ -454,8 +454,9 @@ void image_draw_rectan(uint8(*image)[188])
 
 	}
 }
-#define Image_Down 120
 uint8_t Best_thrsod;    //八邻域得到的阈值
+uint8_t ZhongZhi=94;
+
 void image_process(void)
 {
 		uint16 i;
@@ -511,6 +512,15 @@ void image_process(void)
 			ips200_draw_point(l_border[i],    i+Image_Down, RGB565_GREEN);   //显示起点 显示左边线
 			ips200_draw_point(r_border[i],    i+Image_Down, RGB565_GREEN);   //显示起点 显示右边线
 		}
+      //			ZhongZhi=center_line[5];
+			ZhongZhi=(center_line[0]
+						   +center_line[1]
+						   +center_line[2]
+						 	 +center_line[3]
+							 +center_line[4])/5;  //加权平均获取中值
+			ips200_show_string(188,32+Image_Down,"Middle");
+			ips200_show_uint  (188,48+Image_Down, ZhongZhi, 3);
+
 }
 
 

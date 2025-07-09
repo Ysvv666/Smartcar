@@ -2,6 +2,7 @@
 #define _image_h_
 
 #include "zf_common_headfile.h"
+#define Image_Down 120
 
 int my_abs(int8 a);
 int OtsuThreshold(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int height);

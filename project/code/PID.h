@@ -19,6 +19,7 @@ typedef struct {
 	float OutMax;
 	float OutMin;
 	
+//写了串级pid，以下变量就此告一段落
 	float Base_Speed;
 
 	float OutLeft;

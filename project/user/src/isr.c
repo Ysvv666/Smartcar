@@ -128,32 +128,32 @@ void TIM6_IRQHandler (void)
 //-------------------------------------------------------------------------------------------------------------------
 
 extern PID_t Outer;
-extern PID_t Inner;
+extern PID_t Inner_Left;
+extern PID_t Inner_Right;
 extern uint8 center_line[120];//中线数组
-uint8_t ZhongZhi=94;
+extern uint8_t ZhongZhi;
+#define Base_Speed 2000
 void TIM7_IRQHandler (void)
 {
-	    ZhongZhi=(center_line[0]*0.3
-							 +center_line[1]*0.3
-							 +center_line[2]*0.2
-							 +center_line[3]*0.1
-							 +center_line[4]*0.1)/5;  //加权平均
-			Outer.Actual=center_line[0];		  //外环为位置环，实际值为位置值
+			Outer.Actual=ZhongZhi;		        //外环为位置环，实际值为位置值
 /*PID计算及结构体变量值更新*/
-			PID_Update(&Outer);			//调用封装好的函数，一步完成PID计算和更新
-/*外环的输出值作用于内环的目标值，组成串级PID结构*/
-//      Inner.Target = Outer.Out;*************先不用编码器 单环控制***************
-			Motor_Left_PWM(Outer.OutLeft);
-			Motor_Right_PWM(Outer.OutRight);
-/*内环获取实际值*/
-//		  Inner.Actual= (en_speed1+en_speed2)/2;		//内环为速度环，实际值为速度值
-/*PID计算及结构体变量值更新*/
-//		  PID_Update(&Inner);			//调用封装好的函数，一步完成PID计算和更新
-/*内环输出值给到电机PWM*/
-//	    Motor_Left_PWM(Inner.OutLeft);
-//	    Motor_Right_PWM(Inner.OutRight);
-//		}
+			PID_Update(&Outer);			          //调用封装好的函数，一步完成PID计算和更新
+	
+		  Motor_Left_PWM (Outer.OutLeft );
+	    Motor_Right_PWM(Outer.OutRight);
 
+///*外环的输出值作用于内环的目标值，组成串级PID结构*/
+//      Inner_Left.Target = Base_Speed + Outer.Out;
+//      Inner_Right.Target= Base_Speed - Outer.Out;
+///*内环获取实际值*/
+//		  Inner_Left.Actual = en_speed1;		//内环为速度环，实际值为左轮速度值
+//		  Inner_Right.Actual= en_speed2;		//内环为速度环，实际值为右轮速度值
+///*PID计算及结构体变量值更新*/
+//		  PID_Update(&Inner_Left);			    //调用封装好的函数，一步完成PID计算和更新
+//		  PID_Update(&Inner_Right);		    	//调用封装好的函数，一步完成PID计算和更新
+///*内环输出值给到电机PWM*/
+//	    Motor_Left_PWM (Inner_Left.Out );
+//	    Motor_Right_PWM(Inner_Right.Out);
    // 此处编写用户代码
     TIM7->SR &= ~TIM7->SR;// 清空中断状态
 }
