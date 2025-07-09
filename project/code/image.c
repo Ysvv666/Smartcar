@@ -1,16 +1,24 @@
 #include "image.h"
-//绝对值函数***********************************************
-int my_abs(int8 a){
-	int8 x =0;
-	if(a>=0){x=a;}
-	else if(a<0){x=-a;}
-	return x;
+/**
+  * @brief 计算绝对值
+	* @param width  图像宽度
+	* @param height 图像高度
+  * @retval 绝对值
+  */
+int my_abs(int a){
+	if(a>=0)return a;
+	else return -a;
 }
-//大津法计算阈值***********************************************
-//传入二维图像数组*********************************************
+/**
+  * @brief 大津法计算阈值
+  * @param image[MT9V03X_H][MT9V03X_W] 传入二维图像数组
+  * @param width  图像宽度
+  * @param height 图像高度
+  * @retval 最佳阈值
+  */
 #define GRAY_SCALE 256
 #define ROI_Y_START  0                // ROI起始行（感兴趣区域）
-#define ROI_Y_END 188                 // ROI结束行
+#define ROI_Y_END MT9V03X_H           // ROI结束行
 #define MIN_GRAY_THRESHOLD 20         // 最小灰度阈值
 #define MAX_GRAY_THRESHOLD 230        // 最大灰度阈值
 int OtsuThreshold(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int height)
@@ -61,7 +69,14 @@ int OtsuThreshold(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int heig
 		}
 		return threshold;
 }
-//图像二值化（binarize）函数***********************************************
+/**
+  * @brief 图像二值化（binarize）函数
+  * @param image[MT9V03X_H][MT9V03X_W] 传入二维图像数组
+  * @param width  图像宽度
+  * @param height 图像高度
+  * @param threshold 阈值
+  * @retval 无
+  */
 void binarizeImage(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int height, int threshold) {
 		for (int i = 0; i < height; i++) {
 				for (int j = 0; j < width; j++) {
@@ -70,15 +85,15 @@ void binarizeImage(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int hei
 		}
 }
 /**
- * 在二值图像中寻找左右边界的起始点 寻找两个边界的边界点作为八邻域循环的起始点
- * @param start_row 搜索起始行
- * @return 1表示成功找到左右起点，0表示未找到或者只找到一个起点
- */
+  * @brief 在二值图像中寻找左右边界的起始点 寻找两个边界的边界点作为八邻域循环的起始点
+  * @param image 传入二维图像数组
+  * @param start_row 搜索起始行
+  * @retval 1表示成功找到左右起点，0表示未找到或者只找到一个起点
+  */
 uint8 start_point_l[2]={0,0};//左边起点的x，y值
 uint8 start_point_r[2]={0,0};//右边起点的x，y值
 uint8 l_found=0;//找到分界标志位
 uint8 r_found=0;
-
 uint8 get_start_point(unsigned char image[MT9V03X_H][MT9V03X_W],uint8 start_row)
 {
 		// 清零起点坐标
@@ -89,20 +104,18 @@ uint8 get_start_point(unsigned char image[MT9V03X_H][MT9V03X_W],uint8 start_row)
 		// 清零找到标志位
 		l_found = 0;
 		r_found = 0;
-
 		// 从中间往左边搜索左边界起点
-		for (int i = 188 / 2; i > 0; i--) {
+		for (int i=MT9V03X_W/2;i>0;i--) {
 				start_point_l[0]=i;         //x
 				start_point_l[1]=start_row; //y
 		// 找到黑白边界：白色像素左侧是黑色像素
-				if(image[start_row][i]==255 && image[start_row][i-1]==0){
+				if(image[start_row][i]==255&&image[start_row][i-1]==0){
 						l_found = 1;
 						break;
 				}
 		}
-
 		// 从中间往右边搜索右边界起点
-		for (int i = 188 / 2; i < 188;i++){
+		for (int i=MT9V03X_W/2;i<MT9V03X_W-1;i++){
 				// 避免数组越界        
 				start_point_r[0]=i;        //x
 				start_point_r[1]=start_row;//y
@@ -115,17 +128,18 @@ uint8 get_start_point(unsigned char image[MT9V03X_H][MT9V03X_W],uint8 start_row)
 		return(l_found && r_found)? 1:0;
 }
 /**
- * 基于八邻域搜索的左右边界跟踪算法
- * @param break_flag 最大迭代次数
- * @param image 二值图像数据（二维数组）
- * @param l_stastic 左边界点统计计数器
- * @param r_stastic 右边界点统计计数器
- * @param l_start_x 左边界起点x坐标
- * @param l_start_y 左边界起点y坐标
- * @param r_start_x 右边界起点x坐标
- * @param r_start_y 右边界起点y坐标
- * @param hightest 跟踪到的最高点y坐标
- */
+  * 基于八邻域搜索的左右边界跟踪算法
+  * @param break_flag 最大迭代次数
+  * @param image 二值图像数据（二维数组）
+  * @param l_stastic 左边界点统计计数器
+  * @param r_stastic 右边界点统计计数器
+  * @param l_start_x 左边界起点x坐标
+  * @param l_start_y 左边界起点y坐标
+  * @param r_start_x 右边界起点x坐标
+  * @param r_start_y 右边界起点y坐标
+  * @param hightest 跟踪到的最高点y坐标
+  * @retval 无
+  */
 // 定义找点的最大数组成员个数
 #define USE_NUM (MT9V03X_H * 3)
 // 存放点的x，y坐标
@@ -133,10 +147,9 @@ uint16 points_l[USE_NUM][2] = {{0,0}};//左线坐标
 uint16 points_r[USE_NUM][2] = {{0,0}};//右线坐标
 uint16 dir_r[USE_NUM] = {0};//存储右边生长方向
 uint16 dir_l[USE_NUM] = {0};//存储左边生长方向
-uint16 data_statics_l = 0;//统计左边找到点的个数
-uint16 data_statics_r = 0;//统计右边找到点的个数
-uint8 hightest = 0;//最高点
-
+uint16 data_statics_l = 0;  //统计左边找到点的个数
+uint16 data_statics_r = 0;  //统计右边找到点的个数
+uint8  hightest = 0;        //最高点
 void search_l_r(uint16 break_flag, uint8 image[MT9V03X_H][MT9V03X_W], uint16 *l_stastic, uint16 *r_stastic, 
 								uint8 l_start_x, uint8 l_start_y, uint8 r_start_x, uint8 r_start_y, uint8* hightest){
 // {{-1,-1},{ 0,-1},{ 1,-1},
@@ -332,26 +345,26 @@ void search_l_r(uint16 break_flag, uint8 image[MT9V03X_H][MT9V03X_W], uint16 *l_
 				*hightest = 0;
 		}
 }
-
-/*
- *功能说明：从八邻域边界里提取需要的边线
- *total_L	：找到的点的总数
- *example： get_left(data_stastics_l );
- */
-uint8 l_border[120];//左线数组
-uint8 r_border[120];//右线数组
-uint8 center_line[120];//中线数组
+/**
+  * @brief 从八邻域边界里提取需要的边线
+  * @param total_L	：找到的点的总数
+	*	@example： get_left(data_stastics_l);
+  * @retval 无
+  */
+uint8 l_border[MT9V03X_H];//左线数组
+uint8 r_border[MT9V03X_H];//右线数组
+uint8 center_line[MT9V03X_H];//中线数组
 void get_left	(uint16 total_L)
 {
-	uint8 i = 0;
+	uint8  i = 0;
 	uint16 j = 0;
-	uint8 h = 0;
+	uint8  h = 0;
 	//初始化
-	for (i = 0;i<120;i++)
+	for (i = 0;i<MT9V03X_H;i++)
 	{
 		l_border[i] = 0;
 	}
-	h = 120 - 2;
+	h = MT9V03X_H - 2;
 	//左边
 	for (j = 0; j < total_L; j++)
 	{
@@ -367,21 +380,22 @@ void get_left	(uint16 total_L)
 		}
 	}
 }
-/*
- *从八邻域边界里提取需要的边线
- *total_R  ：找到的点的总数
- *example：get_right(data_stastics_r);
- */
+/**
+  * @brief 从八邻域边界里提取需要的边线
+  * @param total_R	：找到的点的总数
+	*	@example： get_right(data_stastics_r);
+  * @retval 无
+  */
 void get_right(uint16 total_R)
 {
 	uint8 i = 0;
 	uint16 j = 0;
 	uint8 h = 0;
-	for (i = 0; i < 120; i++)
+	for (i = 0; i < MT9V03X_H; i++)
 	{
-		r_border[i] = 188;//右边线初始化放到最右边，左边线放到最左边，这样八邻域闭合区域外的中线就会在中间，不会干扰得到的数据
+		r_border[i] = MT9V03X_W;//右边线初始化放到最右边，左边线放到最左边，这样八邻域闭合区域外的中线就会在中间，不会干扰得到的数据
 	}
-	h = 120 - 2;
+	h = MT9V03X_H - 2;
 	//右边
 	for (j = 0; j < total_R; j++)
 	{
@@ -394,77 +408,88 @@ void get_right(uint16 total_R)
 		if (h == 0)break;//到最后一行退出
 	}
 }
-
+/**
+  * @brief 八邻域图像滤波
+  * @param image 传入二维图像数组
+  * @retval 无
+  */
 //定义膨胀和腐蚀的阈值区间
 //当中心像素为黑色 (0) 且周围白色像素足够多时，将其变为白色 (255)，实现膨胀效果
 //当中心像素为白色 (255) 且周围黑色像素足够多时，将其变为黑色 (0)，实现腐蚀效果
 #define threshold_max	255*5//此参数可根据自己的需求调节
 #define threshold_min	255*2//此参数可根据自己的需求调节
-void image_filter(uint8(*bin_image)[188])//形态学滤波，简单来说就是膨胀和腐蚀的思想
+void image_filter(uint8 image[MT9V03X_H][MT9V03X_W])//形态学滤波，简单来说就是膨胀和腐蚀的思想
 {
-	uint16 i, j;
-	uint32 num = 0;
-
-
-	for (i = 1; i < 120 - 1; i++)
-	{
-		for (j = 1; j < (188 - 1); j++)
-		{
-			//统计八个方向的像素值
-			num =
-				bin_image[i - 1][j - 1] + bin_image[i - 1][j] + bin_image[i - 1][j + 1]
-				+ bin_image[i][j - 1] + bin_image[i][j + 1]
-				+ bin_image[i + 1][j - 1] + bin_image[i + 1][j] + bin_image[i + 1][j + 1];
-
-
-			if (num >= threshold_max && bin_image[i][j] == 0)
-			{
-
-				bin_image[i][j] = 255;//白  可以搞成宏定义，方便更改
-
-			}
-			if (num <= threshold_min && bin_image[i][j] == 255)
-			{
-
-				bin_image[i][j] = 0;//黑
-
-			}
-
-		}
-	}
-
+		uint16 i, j;
+		uint32 num = 0;
+		for (i = 1; i < MT9V03X_H - 1; i++){
+				for (j = 1; j < (MT9V03X_W - 1); j++){
+				    //统计八个方向的像素值
+						num=image[i-1][j-1]+image[i-1][j]+image[i-1][j+1]
+							 +image[i][j - 1]              +image[i][j + 1]
+							 +image[i+1][j-1]+image[i+1][j]+image[i+1][j+1];
+			      if (num >= threshold_max && image[i][j] == 0){
+								image[i][j] = 255;
+						}
+						if (num <= threshold_min && image[i][j] == 255)
+						{
+								image[i][j] = 0;
+						}
+		    }
+	  } 
 }
-void image_draw_rectan(uint8(*image)[188])
+/**                            __
+  * @brief 图像预处理，给图像套一个黑框| |
+  * @param image 传入二维图像数组
+  * @retval 无
+  */
+void image_draw_rectan(uint8 image[MT9V03X_H][MT9V03X_W])
 {
 
-	uint8 i = 0;
-	for (i = 0; i < 120; i++)
-	{
-		image[i][0] = 0;
-		image[i][1] = 0;
-		image[i][188 - 1] = 0;
-		image[i][188 - 2] = 0;
-
-	}
-	for (i = 0; i < 188; i++)
-	{
+		uint8 i=0;
+		for(i=0;i<MT9V03X_H;i++)
+		{
+				image[i][0] = 0;
+				image[i][1] = 0;
+				image[i][MT9V03X_W - 1] = 0;
+				image[i][MT9V03X_W - 2] = 0;
+		}
+		for (i = 0; i < MT9V03X_W; i++)
+		{
 		image[0][i] = 0;
 		image[1][i] = 0;
 		//image[image_h-1][i] = 0;
-
-	}
+		}
 }
+/**                    
+  * @brief 图像处理汇总
+  * @param 无
+  * @retval 无
+  */
 uint8_t Best_thrsod;    //八邻域得到的阈值
 uint8_t ZhongZhi=94;
-char pid_flag;
+char pid_flag;          //1时即可进入pid中断输出
+uint8_t QuanZhong[MT9V03X_H]={3,3,3,3,3,3,3,3,3,3,3,3,
+															4,4,4,4,4,4,4,4,4,4,4,4,
+															8,8,8,8,8,8,8,8,8,8,8,8,
+															10,10,10,10,10,10,10,10,10,10,
+															10,10,10,10,10,10,10,10,10,10,
+	                            6,6,6,6,6,6,6,6,6,6,6,6,
+															3,3,3,3,3,3,3,3,3,3,3,3,
+	                            1,1,1,1,1,1,1,1,1,1,1,1,
+															1,1,1,1,1,1,1,1,1,1,1,1,
+															1,1,1,1,1,1,1,1,1,1,1,1 };//120个点
+uint16_t Sum_QuanZhong;
+uint16_t Sum_ZhongZhi;
+#define YouXiao 70   //(0~1220)
 void image_process(void)
 {
 		uint16 i;
 		uint8 hightest = 0;//定义一个最高行，tip：这里的最高指的是y值的最小
 		
 		Best_thrsod=OtsuThreshold(image_copy,MT9V03X_W,MT9V03X_H);//大津法 动态阈值	
-	  ips200_show_string(188,Image_Down,"YuZhi:");
-		ips200_show_uint  (188,16+Image_Down, Best_thrsod, 3);
+	  ips200_show_string(MT9V03X_W,Image_Down,"YuZhi:");
+		ips200_show_uint  (MT9V03X_W,16+Image_Down, Best_thrsod, 3);
 	  ips200_show_string(212,16+Image_Down,"^@^");
   	binarizeImage(image_copy,MT9V03X_W,MT9V03X_H,Best_thrsod);//二值化
 //提取赛道边界\预处理
@@ -473,7 +498,7 @@ void image_process(void)
 //清零	
 		data_statics_l = 0;
 		data_statics_r = 0;
-	  if(get_start_point(image_copy,120-1)){//找到起点了，再执行八领域，没找到就一直找 (不用while防止程序死循环，最好先放到赛道上)
+	  if(get_start_point(image_copy,MT9V03X_H-1)){//找到起点了，再执行八领域，没找到就一直找 (不用while防止程序死循环，最好先放到赛道上)
 //八邻域提取边界				
 				search_l_r((uint16)USE_NUM, image_copy, 
 				&data_statics_l ,  &data_statics_r, 
@@ -484,13 +509,13 @@ void image_process(void)
 				get_right(data_statics_r);
 		}
 
-/*如果有元素处理就都写在这里
- *
- *		
- *	
- *
- *		
- */
+/**如果有元素处理就都写在这里
+  *
+  *		
+  *	
+  *
+  *		
+  */
 //显示图像
 		ips200_show_gray_image(0, Image_Down, (const uint8 *)image_copy, MT9V03X_W, MT9V03X_H, MT9V03X_W, MT9V03X_H, Best_thrsod);
 //根据最终循环次数画出边界点
@@ -503,7 +528,7 @@ void image_process(void)
 			ips200_draw_point(points_r[i][0]-2, points_r[i][1]+Image_Down, RGB565_RED);//显示起点
 		}
 
-		for (i = hightest; i < 120-1; i++)
+		for (i = hightest; i < MT9V03X_H-1; i++)
 		{
 			center_line[i] = (l_border[i] + r_border[i]) >> 1;//求中线
 			//求中线最好最后求，不管是补线还是做状态机，全程最好使用一组边线，中线最后求出，不能干扰最后的输出
@@ -512,13 +537,14 @@ void image_process(void)
 			ips200_draw_point(l_border[i],    i+Image_Down, RGB565_GREEN);   //显示起点 显示左边线
 			ips200_draw_point(r_border[i],    i+Image_Down, RGB565_GREEN);   //显示起点 显示右边线
 		}
-      //			ZhongZhi=center_line[5];
-			ZhongZhi=center_line[0]*0.5
-						  +center_line[1]*0.3
-						  +center_line[2]*0.2;  //加权平均获取中值
-			ips200_show_string(188,32+Image_Down,"Middle");
-			ips200_show_uint  (188,48+Image_Down, ZhongZhi, 3);
-			pid_flag=1;
+		for (i = hightest; i < hightest + YouXiao ; i++){
+				Sum_ZhongZhi=center_line[i]*QuanZhong[i];   
+				Sum_QuanZhong+=QuanZhong[i];
+		}
+		ZhongZhi=(uint8_t)(Sum_ZhongZhi/Sum_QuanZhong);
+		ips200_show_string(MT9V03X_W,32+Image_Down,"Middle");
+		ips200_show_uint  (MT9V03X_W,48+Image_Down,ZhongZhi,3);
+		pid_flag=1;
 }
 
 
@@ -556,9 +582,9 @@ void image_process(void)
 //  uint8_t Threshold0 = 0;             //
 //  uint8 *tmImagep;
 //  uint8 *imgp;
-//  int tmImage_size=188*(LQOSTU_MAX-LQOSTU_MIN+1)/3-1;
+//  int tmImage_size=MT9V03X_W*(LQOSTU_MAX-LQOSTU_MIN+1)/3-1;
 //  imgp=(uint8_t *)mt9v03x_image;
-//  tmImagep=imgp+188*LQOSTU_MIN;
+//  tmImagep=imgp+MT9V03X_W*LQOSTU_MIN;
 //  for (j = 0; j < 256; j++)
 //  {
 //    HistoGram[j] = 0; //初始化灰度直方图

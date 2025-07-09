@@ -4,18 +4,17 @@
 #include "zf_common_headfile.h"
 #define Image_Down 120
 
-int my_abs(int8 a);
+int my_abs(int a);
 int OtsuThreshold(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int height);
 void binarizeImage(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int height, int threshold);
-uint8 get_start_point(unsigned char image[MT9V03X_H][MT9V03X_W],uint8 start_row);
+uint8 get_start_point(unsigned char image[MT9V03X_H][MT9V03X_W], uint8 start_row);
 void search_l_r(uint16 break_flag, uint8 image[MT9V03X_H][MT9V03X_W], uint16 *l_stastic, uint16 *r_stastic, 
-								uint8 l_start_x, uint8 l_start_y, uint8 r_start_x, uint8 r_start_y, uint8* hightest);
-void get_left	(uint16 total_L);
+                uint8 l_start_x, uint8 l_start_y, uint8 r_start_x, uint8 r_start_y, uint8* hightest);
+void get_left(uint16 total_L);
 void get_right(uint16 total_R);
-void image_filter(uint8(*bin_image)[188]);//形态学滤波，简单来说就是膨胀和腐蚀的思想
-void image_draw_rectan(uint8(*image)[188]);// 图像边缘画黑框
+void image_filter(uint8 image[MT9V03X_H][MT9V03X_W]);
+void image_draw_rectan(uint8 image[MT9V03X_H][MT9V03X_W]);
 void image_process(void);
-
 
 //#define ROW 120
 //#define COL 188

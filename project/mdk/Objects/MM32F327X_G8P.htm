@@ -3,9 +3,9 @@
 <title>Static Call Graph - [.\Objects\MM32F327X_G8P.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\MM32F327X_G8P.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6070001: Last Updated: Wed Jul  9 14:42:23 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6070001: Last Updated: Wed Jul  9 17:09:48 2025
 <BR><P>
-<H3>Maximum Stack Usage =       7648 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =       7608 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 main &rArr; image_process &rArr; OtsuThreshold &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 <P>
@@ -394,7 +394,6 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OtsuThreshold
-<LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;image_process
 <LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_drsub
 <LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_fp_digits
 </UL>
@@ -418,7 +417,6 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OtsuThreshold
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm1xa_sound_callback
-<LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;image_process
 <LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_fp_digits
 </UL>
 
@@ -481,7 +479,6 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_double_epilogue
 </UL>
 <BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OtsuThreshold
-<LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;image_process
 </UL>
 
 <P><STRONG><a name="[97]"></a>__aeabi_f2iz</STRONG> (Thumb, 50 bytes, Stack size 0 bytes, ffixi.o(.text))
@@ -499,7 +496,6 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_llsr
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dm1xa_sound_callback
-<LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;image_process
 </UL>
 
 <P><STRONG><a name="[b6]"></a>__aeabi_f2d</STRONG> (Thumb, 38 bytes, Stack size 0 bytes, f2d.o(.text))
@@ -1002,9 +998,9 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = dm1xa_sound_callback &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
-<LI><a href="#[6a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2uiz
 <LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ui2f
 <LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
+<LI><a href="#[6a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2uiz
 <LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gpio_get_level
 <LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_get
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_clear
@@ -1234,8 +1230,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;image_process
 </UL>
 
-<P><STRONG><a name="[c8]"></a>image_process</STRONG> (Thumb, 854 bytes, Stack size 144 bytes, image.o(.text.image_process))
-<BR><BR>[Stack]<UL><LI>Max Depth = 7632<LI>Call Chain = image_process &rArr; OtsuThreshold &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
+<P><STRONG><a name="[c8]"></a>image_process</STRONG> (Thumb, 834 bytes, Stack size 104 bytes, image.o(.text.image_process))
+<BR><BR>[Stack]<UL><LI>Max Depth = 7592<LI>Call Chain = image_process &rArr; OtsuThreshold &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;search_l_r
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_show_uint
@@ -1247,10 +1243,6 @@ Global Symbols
 <LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_right
 <LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_left
 <LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;binarizeImage
-<LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
-<LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
-<LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
-<LI><a href="#[6a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2uiz
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OtsuThreshold
 <LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_show_string
 </UL>
@@ -1432,7 +1424,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[49]"></a>main</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, main.o(.text.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 7648<LI>Call Chain = main &rArr; image_process &rArr; OtsuThreshold &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
+<BR><BR>[Stack]<UL><LI>Max Depth = 7608<LI>Call Chain = main &rArr; image_process &rArr; OtsuThreshold &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;image_process
 <LI><a href="#[6f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;All_Init
@@ -1500,8 +1492,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mt9v03x_init
 </UL>
 
-<P><STRONG><a name="[f3]"></a>my_abs</STRONG> (Thumb, 70 bytes, Stack size 8 bytes, image.o(.text.my_abs))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = my_abs
+<P><STRONG><a name="[f3]"></a>my_abs</STRONG> (Thumb, 36 bytes, Stack size 12 bytes, image.o(.text.my_abs))
+<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = my_abs
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;search_l_r
 </UL>
@@ -1547,8 +1539,8 @@ Global Symbols
 <LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Left_PWM
 </UL>
 
-<P><STRONG><a name="[ce]"></a>search_l_r</STRONG> (Thumb, 1646 bytes, Stack size 192 bytes, image.o(.text.search_l_r))
-<BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = search_l_r &rArr; my_abs
+<P><STRONG><a name="[ce]"></a>search_l_r</STRONG> (Thumb, 1642 bytes, Stack size 192 bytes, image.o(.text.search_l_r))
+<BR><BR>[Stack]<UL><LI>Max Depth = 204<LI>Call Chain = search_l_r &rArr; my_abs
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;my_abs
 </UL>
