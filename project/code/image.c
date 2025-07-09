@@ -454,15 +454,19 @@ void image_draw_rectan(uint8(*image)[188])
 
 	}
 }
-extern uint8_t Best_thrsod;    //八邻域得到的阈值
+#define Image_Down 120
+uint8_t Best_thrsod;    //八邻域得到的阈值
 void image_process(void)
 {
 		uint16 i;
 		uint8 hightest = 0;//定义一个最高行，tip：这里的最高指的是y值的最小
 		
 		Best_thrsod=OtsuThreshold(image_copy,MT9V03X_W,MT9V03X_H);//大津法 动态阈值	
-	  binarizeImage(image_copy,MT9V03X_W,MT9V03X_H,Best_thrsod);//二值化
-//提取赛道边界
+	  ips200_show_string(188,Image_Down,"YuZhi:");
+		ips200_show_uint  (188,16+Image_Down, Best_thrsod, 3);
+	  ips200_show_string(212,16+Image_Down,"^@^");
+  	binarizeImage(image_copy,MT9V03X_W,MT9V03X_H,Best_thrsod);//二值化
+//提取赛道边界\预处理
 		image_filter(image_copy);//滤波       __
 		image_draw_rectan(image_copy);//加黑框| |
 //清零	
@@ -486,29 +490,26 @@ void image_process(void)
  *
  *		
  */
-	
-
-		
 //显示图像
-		ips200_displayimage03x((const uint8 *)image_copy, MT9V03X_W, MT9V03X_H);//(0,0)显示
+		ips200_show_gray_image(0, Image_Down, (const uint8 *)image_copy, MT9V03X_W, MT9V03X_H, MT9V03X_W, MT9V03X_H, Best_thrsod);
 //根据最终循环次数画出边界点
 		for (i = 0; i < data_statics_l; i++)
 		{
-			ips200_draw_point(points_l[i][0]+2, points_l[i][1], RGB565_BLUE);//显示起点
+			ips200_draw_point(points_l[i][0]+2, points_l[i][1]+Image_Down, RGB565_BLUE);//显示起点
 		}
 		for (i = 0; i < data_statics_r; i++)
 		{
-			ips200_draw_point(points_r[i][0]-2, points_r[i][1], RGB565_RED);//显示起点
+			ips200_draw_point(points_r[i][0]-2, points_r[i][1]+Image_Down, RGB565_RED);//显示起点
 		}
 
 		for (i = hightest; i < 120-1; i++)
 		{
 			center_line[i] = (l_border[i] + r_border[i]) >> 1;//求中线
 			//求中线最好最后求，不管是补线还是做状态机，全程最好使用一组边线，中线最后求出，不能干扰最后的输出
-			//当然也有多组边线的找法 但是个人不建议
-			ips200_draw_point(center_line[i], i, RGB565_GREEN);//显示起点 显示中线	
-			ips200_draw_point(l_border[i],    i, RGB565_GREEN);   //显示起点 显示左边线
-			ips200_draw_point(r_border[i],    i, RGB565_GREEN);   //显示起点 显示右边线
+			//当然也有多组边线的找法 但是不建议
+			ips200_draw_point(center_line[i], i+Image_Down, RGB565_GREEN);   //显示起点 显示中线	
+			ips200_draw_point(l_border[i],    i+Image_Down, RGB565_GREEN);   //显示起点 显示左边线
+			ips200_draw_point(r_border[i],    i+Image_Down, RGB565_GREEN);   //显示起点 显示右边线
 		}
 }
 
@@ -544,11 +545,12 @@ void image_process(void)
 //  double OmegaBack, OmegaFore, MicroBack, MicroFore, SigmaB, Sigma; // 类间方差;
 //  int16_t MinValue, MaxValue;
 //  uint8_t Threshold = 0;             //
+//  uint8_t Threshold0 = 0;             //
 //  uint8 *tmImagep;
 //  uint8 *imgp;
-//  int tmImage_size=C_W*(LQOSTU_MAX-LQOSTU_MIN+1)/3-1;
+//  int tmImage_size=188*(LQOSTU_MAX-LQOSTU_MIN+1)/3-1;
 //  imgp=(uint8_t *)mt9v03x_image;
-//  tmImagep=imgp+C_W*LQOSTU_MIN;
+//  tmImagep=imgp+188*LQOSTU_MIN;
 //  for (j = 0; j < 256; j++)
 //  {
 //    HistoGram[j] = 0; //初始化灰度直方图

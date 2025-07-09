@@ -10,7 +10,6 @@ typedef struct menu_item {
     struct menu_item** child;  
 } menu_item;
 
-void menu_init(void);
 void menu_display(void);
 void moveup(void);
 void movedown(void);

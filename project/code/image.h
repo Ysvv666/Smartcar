@@ -15,7 +15,6 @@ void image_filter(uint8(*bin_image)[188]);//形态学滤波，简单来说就是
 void image_draw_rectan(uint8(*image)[188]);// 图像边缘画黑框
 void image_process(void);
 
-//void sobelAutoThreshold(const uint8 image_mt[MT9V03X_H/2][MT9V03X_W], uint8 target[MT9V03X_H/2][MT9V03X_W]);
 
 //#define ROW 120
 //#define COL 188

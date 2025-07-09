@@ -191,11 +191,6 @@ void Back(void) {
         currentIndex = parentIndex;
     }
 }
-void menu_init(void) {
-    ips200_set_dir(IPS200_PORTAIT);
-    ips200_set_font(IPS200_8X16_FONT);
-    ips200_set_color(RGB565_WHITE, RGB565_BLACK);
-}
 
 void menu_display(void) {
     int i;
