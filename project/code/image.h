@@ -15,6 +15,7 @@ void get_right(uint16 total_R);
 void image_filter(uint8 image[MT9V03X_H][MT9V03X_W]);
 void image_draw_rectan(uint8 image[MT9V03X_H][MT9V03X_W]);
 void image_process(void);
+void ChuJie_Test(uint8 image[MT9V03X_H][MT9V03X_W]);
 
 //#define ROW 120
 //#define COL 188

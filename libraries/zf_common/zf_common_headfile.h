@@ -108,6 +108,7 @@
 #define KEY2                    (E3)
 #define KEY3                    (E4)
 #define KEY4                    (E5)
+#define BUZZER                  (D7)
 
 #define DIR_L               (A0 )
 #define PWM_L               (TIM5_PWM_CH2_A1)

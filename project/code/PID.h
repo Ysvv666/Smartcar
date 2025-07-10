@@ -7,6 +7,8 @@ typedef struct {
 	float Target;
 	float Actual;
 	float Out;
+	float Out0;
+	float Out1;
 	
 	float Kp;
 	float Ki;
@@ -19,6 +21,7 @@ typedef struct {
 	float OutMax;
 	float OutMin;
 	
+	float I_Limit;
 //写了串级pid，以下变量就此告一段落
 	float Base_Speed;
 
@@ -29,6 +32,7 @@ typedef struct {
 	float OutEndMin;
 } PID_t;
 
-void PID_Update(PID_t *p);
+void PID_Position_Update(PID_t *p);
+void PID_Increase_Update(PID_t *p);
 
 #endif

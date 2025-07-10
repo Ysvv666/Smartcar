@@ -1,16 +1,17 @@
 #include "zf_common_headfile.h"
-// **************************** 变量区域 ****************************
 //写了串级pid代码，差速大法的变量告一段落2025.7.9
 PID_t Outer = {					//外环PID结构体变量，定义的时候同时给部分成员赋初值
-	.Kp = 1, 	  			  //比例项权重
-	.Ki = 0,					    //积分项权重
-	.Kd = 1,					    //微分项权重
-	.OutMax = 10,				  //PID_Out输出限幅的最大值
+	.Kp = 0.5, 	  			  //比例项权重
+	.Ki = 1.5,					    //积分项权重
+	.Kd = 0,					    //微分项权重
+	.OutMax = 15,				  //PID_Out输出限幅的最大值
 	.OutMin =-10,			  	//PID_Out输出限幅的最小值
 	.Target = 94,       	//目标值
+
+	.I_Limit = 30,				//积分限幅
 	
 	.Base_Speed = 10,			//基础速度
-	.OutEndMax = 20,			//最终输出限幅的最大值
+	.OutEndMax = 15,			//最终输出限幅的最大值
 	.OutEndMin = 0,       //最终输出限幅的最小值
 };
 /*双环pid串级控制（先不用，已注释）
@@ -55,6 +56,10 @@ void All_Init(){
 		gpio_init(KEY2, GPI, GPIO_HIGH, GPI_PULL_UP);       // 初始化 KEY2 输入 默认高电平 上拉输入
 		gpio_init(KEY3, GPI, GPIO_HIGH, GPI_PULL_UP);       // 初始化 KEY3 输入 默认高电平 上拉输入
 		gpio_init(KEY4, GPI, GPIO_HIGH, GPI_PULL_UP);       // 初始化 KEY4 输入 默认高电平 上拉输入
+//蜂鸣器初始化
+		gpio_init(BUZZER, GPO, GPIO_HIGH, GPO_PUSH_PULL);     // 初始化 蜂鸣器 推挽输出默认高
+		system_delay_ms(200);
+		gpio_set_level(BUZZER, GPIO_LOW);
 //电机引脚初始化
     gpio_init(DIR_L, GPO, GPIO_HIGH, GPO_PUSH_PULL);    // GPIO 初始化为输出 默认上拉输出高
     pwm_init(PWM_L, 17000, 0);                          // PWM 通道初始化频率 17KHz 占空比初始为 0
@@ -70,7 +75,7 @@ void All_Init(){
  */
 		pit_ms_init(TIM2_PIT, 10); 	 //定时器中断2用于按键处理       10ms
 		pit_ms_init(TIM6_PIT, 100);	 //定时器中断6用于编码器获取数据  100ms
-		pit_ms_init(TIM7_PIT, 20);	 //定时器中断7用于电机PID控制    20ms
+		pit_ms_init(TIM7_PIT, 10);	 //定时器中断7用于电机PID控制    10ms
 		interrupt_set_priority(TIM2_IRQn, 0);//设置中断2优先级
 		interrupt_set_priority(TIM6_IRQn, 1);//设置中断6优先级
     interrupt_set_priority(TIM7_IRQn, 2);//设置中断7优先级
@@ -89,6 +94,7 @@ int main(void)
 			}
 		}
 }
+/*图像函数
 //(0,0)显示image_copy
 //ips200_displayimage03x((const uint8 *)image_copy, MT9V03X_W, MT9V03X_H);
 //(0,136)显示二值化后（阈值0，即原图）的image_copy
@@ -96,3 +102,4 @@ int main(void)
 //(0,136)显示二值化后（阈值为Best_thrsod）的image_copy
 //Best_thrsod=OtsuThreshold(image_copy,MT9V03X_W,MT9V03X_H);//大津法 动态阈值	
 //ips200_show_gray_image(0, 136, (const uint8 *)image_copy, MT9V03X_W, MT9V03X_H, MT9V03X_W, MT9V03X_H, Best_thrsod);
+*/
