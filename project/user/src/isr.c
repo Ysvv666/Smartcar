@@ -130,17 +130,11 @@ void TIM6_IRQHandler (void)
 extern PID_t Outer;
 //extern PID_t Inner_Left;
 //extern PID_t Inner_Right;
-extern uint8 center_line[120];//中线数组
-extern uint8_t ZhongZhi;
-extern char pid_flag;
-#define Base_Speed 2000
-extern uint8 YueJie_flag;
+//#define Base_Speed 2000
 void TIM7_IRQHandler (void)
 {				
-		if(pid_flag==1 && YueJie_flag==0){//正常循迹
-				Outer.Actual=ZhongZhi;		      			  //外环为位置环，实际值为位置值
-/*PID计算及结构体变量值更新*/
-//				PID_Position_Update(&Outer);		//位置式PID
+		if(pid_flag==1 && YueJie_flag==0){  //正常循迹
+				Outer.Actual=ZhongZhi;		      //外环为位置环，实际值为位置值
 				PID_Increase_Update(&Outer);		//增量式PID
 				Motor_Left_PWM (Outer.OutLeft );
 				Motor_Right_PWM(Outer.OutRight);
@@ -150,6 +144,7 @@ void TIM7_IRQHandler (void)
 				Motor_Left_PWM (0);
 				Motor_Right_PWM(0);
 		}
+	  Motor_Protection();//电机过热保护
 
 ///*外环的输出值作用于内环的目标值，组成串级PID结构*/
 //      Inner_Left.Target = Base_Speed + Outer.Out;

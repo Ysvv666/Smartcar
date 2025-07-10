@@ -242,7 +242,6 @@ uint8 get_start_point(unsigned char image[MT9V03X_H][MT9V03X_W],uint8 start_row)
   * @retval 无
   */
 // 定义找点的最大数组成员个数
-const uint16_t USE_NUM =(MT9V03X_H * 3);
 // 存放点的x，y坐标
 uint16 points_l[USE_NUM][2] = {{0,0}};//左线坐标
 uint16 points_r[USE_NUM][2] = {{0,0}};//右线坐标
@@ -502,29 +501,27 @@ void get_right(uint16 total_R)
 		}
 }
 /**                    
-  * @brief 出界紧急停止
+  * @brief 出界紧急停止 取图像下面中间10*60个点
   * @param image 传入二维图像数组
   * @retval 无
   */
 uint8 YueJie_flag=0;
-uint8 Buzzer_ChuJie_flag=0;
+uint8 Buzzer_ChuJie_flag=0;//
 void ChuJie_Test(uint8 image[MT9V03X_H][MT9V03X_W]){
 		uint8 i=0;
 		uint8 j=0;
 		uint16 sum=0;
 		for(i=110;i<120;i++){
-				for(j=40;j<148;j++){
+				for(j=64;j<124;j++){
 						if(image[i][j]==0){
 								sum++;
 						}
 				}
 		}
-		if(sum >1000){
+		if(sum >550){
 				YueJie_flag=1;
 				if(Buzzer_ChuJie_flag==0){
-						gpio_set_level(BUZZER, GPIO_HIGH);
-						system_delay_ms(200);
-						gpio_set_level(BUZZER, GPIO_LOW);
+						Buzzer_On_Count(1);
 						Buzzer_ChuJie_flag=1;
 				}
 		}
@@ -561,6 +558,7 @@ uint8_t Best_thrsod;    //八邻域得到的阈值
 uint8_t ZhongZhi0=94;
 uint8_t ZhongZhi1=94;
 uint8_t ZhongZhi=94;
+uint8_t Image_Down=120; //图像下移距离
 uint16_t Sum_QuanZhong;
 uint16_t Sum_ZhongZhi;
 char pid_flag;          //1时即可进入pid中断输出

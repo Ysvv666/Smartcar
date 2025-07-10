@@ -86,5 +86,6 @@
   ../../libraries/zf_device\zf_device_wifi_uart.h \
   ../../libraries/zf_device\zf_device_wireless_uart.h \
   ../../libraries/components/fatfs/source\ffconf.h \
-  ../../libraries/components/fatfs/source\ff.h ../code\PID.h \
-  ../code\menu.h ../code\image.h ../code\control.h ../code\Showthings.h
+  ../../libraries/components/fatfs/source\ff.h ../user/inc\isr.h \
+  ../code\menu.h ../code\PID.h ../code\image.h ../code\control.h \
+  ../code\Showthings.h ../code\flash.h ../code\beep.h

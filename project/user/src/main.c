@@ -58,8 +58,7 @@ void All_Init(){
 		gpio_init(KEY4, GPI, GPIO_HIGH, GPI_PULL_UP);       // 初始化 KEY4 输入 默认高电平 上拉输入
 //蜂鸣器初始化
 		gpio_init(BUZZER, GPO, GPIO_HIGH, GPO_PUSH_PULL);     // 初始化 蜂鸣器 推挽输出默认高
-		system_delay_ms(200);
-		gpio_set_level(BUZZER, GPIO_LOW);
+		Buzzer_On_Count(1);
 //电机引脚初始化
     gpio_init(DIR_L, GPO, GPIO_HIGH, GPO_PUSH_PULL);    // GPIO 初始化为输出 默认上拉输出高
     pwm_init(PWM_L, 17000, 0);                          // PWM 通道初始化频率 17KHz 占空比初始为 0

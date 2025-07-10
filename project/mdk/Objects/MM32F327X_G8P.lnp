@@ -6,6 +6,8 @@
 ".\objects\image.o"
 ".\objects\control.o"
 ".\objects\showthings.o"
+".\objects\flash.o"
+".\objects\beep.o"
 ".\objects\zf_common_clock.o"
 ".\objects\zf_common_debug.o"
 ".\objects\zf_common_fifo.o"

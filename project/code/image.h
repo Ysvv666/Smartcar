@@ -2,7 +2,37 @@
 #define _image_h_
 
 #include "zf_common_headfile.h"
-#define Image_Down 120
+#define USE_NUM (MT9V03X_H*3)
+
+// 外部变量声明（全局变量需在头文件中声明，方便其他文件使用）
+extern uint8_t  start_point_l[2];
+extern uint8_t  start_point_r[2];
+extern uint8_t  l_found;
+extern uint8_t  r_found;
+extern uint16_t points_l[USE_NUM][2];
+extern uint16_t points_r[USE_NUM][2];
+extern uint16_t dir_l[USE_NUM];
+extern uint16_t dir_r[USE_NUM];
+extern uint16_t data_statics_l;
+extern uint16_t data_statics_r;
+extern uint8_t  hightest;
+
+extern uint8_t  l_border[MT9V03X_H];
+extern uint8_t  r_border[MT9V03X_H];
+extern uint8_t  center_line[MT9V03X_H];
+
+extern uint8_t  YueJie_flag;
+extern uint8_t  Buzzer_ChuJie_flag;
+extern uint8_t  QuanZhong[MT9V03X_H];
+extern uint8_t  Best_thrsod;
+extern uint8_t  ZhongZhi0;
+extern uint8_t  ZhongZhi1;
+extern uint8_t  ZhongZhi;
+extern uint8_t  Image_Down; //图像下移距离
+extern uint16_t Sum_QuanZhong;
+extern uint16_t Sum_ZhongZhi;
+extern char     pid_flag;
+
 
 int my_abs(int a);
 int OtsuThreshold(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int height);

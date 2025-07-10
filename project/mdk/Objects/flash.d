@@ -1,4 +1,4 @@
-./objects/pid.o: ../code/PID.c ../code/PID.h \
+./objects/flash.o: ../code/flash.c ../code/flash.h \
   ../../libraries/zf_common\zf_common_headfile.h \
   D:\program\51Keil\ARM\ARMCLANG\Bin\..\include\stdio.h \
   D:\program\51Keil\ARM\ARMCLANG\Bin\..\include\stdint.h \
