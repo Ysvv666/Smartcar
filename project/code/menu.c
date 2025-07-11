@@ -184,7 +184,6 @@ void Back(void) {
         parentIndex = 2; 
     }
     
-
     if (parent != NULL) {
         currentMenu = parent;
         cursor = parentIndex + 1; 

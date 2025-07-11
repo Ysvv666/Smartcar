@@ -48,8 +48,6 @@ void Motor_Protection(void)
     if(Outer.Out>50   || my_abs(en_speed1-en_speed2)>5000 ||
 		   en_speed1>5000 || en_speed2>5000){
 				 if(Motor_Protection_flag==0){
-						 Motor_Left_PWM (0);
-						 Motor_Right_PWM(0);
 		//  			cargo=0;到时候再用
 					 	 //清除按键状态
 						 key_clear_all_state();

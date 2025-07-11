@@ -133,14 +133,14 @@ extern PID_t Outer;
 //#define Base_Speed 2000
 void TIM7_IRQHandler (void)
 {				
-		if(pid_flag==1 && YueJie_flag==0){  //正常循迹
+		if(pid_flag==1 && YueJie_flag==0 && Motor_Protection_flag==0){  //正常循迹
 				Outer.Actual=ZhongZhi;		      //外环为位置环，实际值为位置值
 				PID_Increase_Update(&Outer);		//增量式PID
 				Motor_Left_PWM (Outer.OutLeft );
 				Motor_Right_PWM(Outer.OutRight);
 				pid_flag=0;
 		}
-		else if(YueJie_flag==1){//当越界了的时候
+		else if(YueJie_flag==1 || Motor_Protection_flag==1){//当越界了的时候
 				Motor_Left_PWM (0);
 				Motor_Right_PWM(0);
 		}

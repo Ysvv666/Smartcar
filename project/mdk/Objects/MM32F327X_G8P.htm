@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\MM32F327X_G8P.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\MM32F327X_G8P.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6070001: Last Updated: Thu Jul 10 23:52:07 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6070001: Last Updated: Fri Jul 11 12:11:48 2025
 <BR><P>
 <H3>Maximum Stack Usage =       7616 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -740,30 +740,26 @@ Global Symbols
 <LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gpio_set_level
 </UL>
 <BR>[Called By]<UL><LI><a href="#[3d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM7_IRQHandler
-<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Protection
 </UL>
 
-<P><STRONG><a name="[85]"></a>Motor_Protection</STRONG> (Thumb, 244 bytes, Stack size 16 bytes, control.o(.text.Motor_Protection))
-<BR><BR>[Stack]<UL><LI>Max Depth = 880<LI>Call Chain = Motor_Protection &rArr; Motor_Right_PWM &rArr; pwm_set_duty &rArr; debug_assert_handler &rArr; debug_output &rArr; sprintf
+<P><STRONG><a name="[85]"></a>Motor_Protection</STRONG> (Thumb, 240 bytes, Stack size 16 bytes, control.o(.text.Motor_Protection))
+<BR><BR>[Stack]<UL><LI>Max Depth = 848<LI>Call Chain = Motor_Protection &rArr; Buzzer_On_Count &rArr; system_delay_ms &rArr; debug_assert_handler &rArr; debug_output &rArr; sprintf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;my_abs
-<LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Right_PWM
-<LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Left_PWM
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Buzzer_On_Count
-<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_clear_all_state
+<LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_clear_all_state
 <LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fcmpgt
 </UL>
 <BR>[Called By]<UL><LI><a href="#[3d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM7_IRQHandler
 </UL>
 
-<P><STRONG><a name="[88]"></a>Motor_Right_PWM</STRONG> (Thumb, 90 bytes, Stack size 24 bytes, control.o(.text.Motor_Right_PWM))
+<P><STRONG><a name="[89]"></a>Motor_Right_PWM</STRONG> (Thumb, 90 bytes, Stack size 24 bytes, control.o(.text.Motor_Right_PWM))
 <BR><BR>[Stack]<UL><LI>Max Depth = 864<LI>Call Chain = Motor_Right_PWM &rArr; pwm_set_duty &rArr; debug_assert_handler &rArr; debug_output &rArr; sprintf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pwm_set_duty
 <LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gpio_set_level
 </UL>
 <BR>[Called By]<UL><LI><a href="#[3d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM7_IRQHandler
-<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Protection
 </UL>
 
 <P><STRONG><a name="[8a]"></a>OtsuThreshold</STRONG> (Thumb, 796 bytes, Stack size 7400 bytes, image.o(.text.OtsuThreshold))
@@ -846,13 +842,13 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_mm32f3277g.o(RESET)
 </UL>
-<P><STRONG><a name="[3d]"></a>TIM7_IRQHandler</STRONG> (Thumb, 182 bytes, Stack size 16 bytes, isr.o(.text.TIM7_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 896<LI>Call Chain = TIM7_IRQHandler &rArr; Motor_Protection &rArr; Motor_Right_PWM &rArr; pwm_set_duty &rArr; debug_assert_handler &rArr; debug_output &rArr; sprintf
+<P><STRONG><a name="[3d]"></a>TIM7_IRQHandler</STRONG> (Thumb, 214 bytes, Stack size 16 bytes, isr.o(.text.TIM7_IRQHandler))
+<BR><BR>[Stack]<UL><LI>Max Depth = 880<LI>Call Chain = TIM7_IRQHandler &rArr; Motor_Right_PWM &rArr; pwm_set_duty &rArr; debug_assert_handler &rArr; debug_output &rArr; sprintf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ui2f
 <LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2iz
 <LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PID_Increase_Update
-<LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Right_PWM
+<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Right_PWM
 <LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Protection
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Left_PWM
 </UL>
@@ -1260,7 +1256,7 @@ Global Symbols
 <P><STRONG><a name="[7e]"></a>gpio_set_level</STRONG> (Thumb, 108 bytes, Stack size 12 bytes, zf_driver_gpio.o(.text.gpio_set_level))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = gpio_set_level
 </UL>
-<BR>[Called By]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Right_PWM
+<BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Right_PWM
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Left_PWM
 <LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gpio_init
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Buzzer_On_Count
@@ -1453,7 +1449,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;image_process
 </UL>
 
-<P><STRONG><a name="[89]"></a>key_clear_all_state</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, zf_device_key.o(.text.key_clear_all_state))
+<P><STRONG><a name="[88]"></a>key_clear_all_state</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, zf_device_key.o(.text.key_clear_all_state))
 <BR><BR>[Called By]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Protection
 </UL>
 
@@ -1599,7 +1595,7 @@ Global Symbols
 <LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_assert_handler
 <LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2uiz
 </UL>
-<BR>[Called By]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Right_PWM
+<BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Right_PWM
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Left_PWM
 </UL>
 
