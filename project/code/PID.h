@@ -16,20 +16,21 @@ typedef struct {
 	
 	float Error0;
 	float Error1;
+	float Error2;
 	float ErrorInt;
 	
 	float OutMax;
 	float OutMin;
 	
 	float I_Limit;
-//写了串级pid，以下变量就此告一段落
-	float Base_Speed;
+////写了串级pid，以下变量就此告一段落
+//	float Base_Speed;
 
-	float OutLeft;
-	float OutRight;
+//	float OutLeft;
+//	float OutRight;
 
-	float OutEndMax;
-	float OutEndMin;
+//	float OutEndMax;
+//	float OutEndMin;
 } PID_t;
 
 void PID_Position_Update(PID_t *p);

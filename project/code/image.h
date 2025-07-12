@@ -4,6 +4,7 @@
 #include "zf_common_headfile.h"
 
 #define USE_NUM (MT9V03X_H*3)
+#define Image_Delete  32        //大概两个字母像素长度
 // 外部变量声明（全局变量需在头文件中声明，方便其他文件使用）
 extern uint8_t  start_point_l[2];
 extern uint8_t  start_point_r[2];
@@ -29,8 +30,8 @@ extern uint8_t  ZhongZhi0;
 extern uint8_t  ZhongZhi1;
 extern uint8_t  ZhongZhi;
 extern uint8_t  Image_Down; //图像下移距离
-extern uint16_t Sum_QuanZhong;
-extern uint16_t Sum_ZhongZhi;
+extern uint32_t Sum_QuanZhong;
+extern uint32_t Sum_ZhongZhi;
 extern char     pid_flag;
 
 

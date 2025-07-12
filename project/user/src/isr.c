@@ -93,6 +93,8 @@ int32 en_speed1;
 int32 en_speed2;
 int32 en_location1;
 int32 en_location2;
+extern PID_t Speed_l;
+extern PID_t Speed_r;
 void TIM6_IRQHandler (void)
 {
 //************编码器1(左轮)**************
@@ -109,6 +111,10 @@ void TIM6_IRQHandler (void)
 		encoder_clear_count(TIM4_ENCODER);
 //************************************
 	
+				Speed_l.Actual=en_speed1;
+				Speed_r.Actual=en_speed2;
+
+
 //************屏幕最底下显示数据************
 		ips200_show_string(0, 256,"Speed1:");
 		ips200_show_int(56, 256, en_speed1, 5);
@@ -127,38 +133,11 @@ void TIM6_IRQHandler (void)
 //              默认优先级 修改优先级使用 interrupt_set_priority(TIM7_IRQn, 1);
 //-------------------------------------------------------------------------------------------------------------------
 
-extern PID_t Outer;
-//extern PID_t Inner_Left;
-//extern PID_t Inner_Right;
-//#define Base_Speed 2000
 void TIM7_IRQHandler (void)
-{				
-		if(pid_flag==1 && YueJie_flag==0 && Motor_Protection_flag==0){  //正常循迹
-				Outer.Actual=ZhongZhi;		      //外环为位置环，实际值为位置值
-				PID_Increase_Update(&Outer);		//增量式PID
-				Motor_Left_PWM (Outer.OutLeft );
-				Motor_Right_PWM(Outer.OutRight);
-				pid_flag=0;
-		}
-		else if(YueJie_flag==1 || Motor_Protection_flag==1){//当越界了的时候
-				Motor_Left_PWM (0);
-				Motor_Right_PWM(0);
-		}
-	  Motor_Protection();//电机过热保护
+{		
+    // 此处编写用户代码
 
-///*外环的输出值作用于内环的目标值，组成串级PID结构*/
-//      Inner_Left.Target = Base_Speed + Outer.Out;
-//      Inner_Right.Target= Base_Speed - Outer.Out;
-///*内环获取实际值*/
-//		  Inner_Left.Actual = en_speed1;		//内环为速度环，实际值为左轮速度值
-//		  Inner_Right.Actual= en_speed2;		//内环为速度环，实际值为右轮速度值
-///*PID计算及结构体变量值更新*/
-//		  PID_Update(&Inner_Left);			    //调用封装好的函数，一步完成PID计算和更新
-//		  PID_Update(&Inner_Right);		    	//调用封装好的函数，一步完成PID计算和更新
-///*内环输出值给到电机PWM*/
-//	    Motor_Left_PWM (Inner_Left.Out );
-//	    Motor_Right_PWM(Inner_Right.Out);
-   // 此处编写用户代码
+    // 此处编写用户代码
     TIM7->SR &= ~TIM7->SR;// 清空中断状态
 }
 
