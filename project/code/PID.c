@@ -67,7 +67,7 @@ void PID_Three_Update(PID_t *p)
   * @retval 无
 ****************Kp随着误差曲线变化而变化*************
   */
-void PID_Two_Update(PID_t *p)
+void PID_KpTwo_Update(PID_t *p)
 {
 		p->Error1 = p->Error0;			
 		p->Error0 = p->Target - p->Actual;	

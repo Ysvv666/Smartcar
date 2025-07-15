@@ -38,6 +38,6 @@ typedef struct {
 void PID_Position_Update(PID_t *p);
 void PID_Increase_Update(PID_t *p);
 void PID_Three_Update(PID_t *p);
-void PID_Two_Update(PID_t *p);
+void PID_KpTwo_Update(PID_t *p);
 
 #endif

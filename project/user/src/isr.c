@@ -143,11 +143,13 @@ void TIM7_IRQHandler (void)
 				if(YueJie_flag==0 && Motor_Protection_flag==0 && Buzzer_Stop_flag==0){  //正常循迹
 						//更新转向环
 						Turn_t.Actual =ZhongZhi;
-						PID_Three_Update(&Turn_t);							 //误差三次方pid 还差个陀螺仪
+//						PID_Three_Update(&Turn_t);							 //误差三次方pid 还差个陀螺仪
+//						PID_KpTwo_Update(&Turn_t);								//Kp平滑分段pid					
+						PID_Position_Update(&Turn_t);						 //普通位置式pid
 						//更新速度环
 						Speed_l.Actual=en_speed1;
 						Speed_r.Actual=en_speed2;
-						float Handle_Speed=HandleSpeed(ZhongZhi);//直道1800，弯道降速到1000
+						float Handle_Speed=HandleSpeed(ZhongZhi);//直道1800，弯道降速到900
 						Speed_l.Target=Handle_Speed;
 						Speed_r.Target=Handle_Speed;
 						PID_Position_Update(&Speed_l);	
@@ -162,6 +164,8 @@ void TIM7_IRQHandler (void)
 						Left_PWM_Out =Speed_l.Out - Turn_t.Out ;
 						Right_PWM_Out=Speed_r.Out + Turn_t.Out ;
 						//PID输出
+						if(Left_PWM_Out<0)Left_PWM_Out=0;
+						if(Right_PWM_Out<0)Right_PWM_Out=0;
 						Motor_Left_PWM (Left_PWM_Out );
 						Motor_Right_PWM(Right_PWM_Out);
 						//显示输出值

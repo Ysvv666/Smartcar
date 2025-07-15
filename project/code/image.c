@@ -523,10 +523,10 @@ void ChuJie_Test(uint8 image[MT9V03X_H][MT9V03X_W]){
 		}
 		if(sum >550){
 				YueJie_flag=1;
-				if(Buzzer_ChuJie_flag==0){
-						Buzzer_On_Count(1);
-						Buzzer_ChuJie_flag=1;
-				}
+//				if(Buzzer_ChuJie_flag==0){
+//						Buzzer_On_Count(1);
+//						Buzzer_ChuJie_flag=1;
+//				}
 		}
 }	
 /**                    
@@ -959,7 +959,7 @@ void image_process(void)
 		}		
 //判断丢线条——即遇到十字****************************************************
 //判断十字并执行补线操作****************************************************
-		myCross_fill();		
+//		myCross_fill();		
 //保护处理**************************************************************	
 		Motor_Protection();//电机过热保护
 		ChuJie_Test(image_copy);//出界保护	
