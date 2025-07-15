@@ -11,6 +11,8 @@ typedef struct {
 	float Out1;
 	
 	float Kp;
+	float Kpa;
+	float Kpb;
 	float Ki;
 	float Kd;
 	
@@ -35,5 +37,7 @@ typedef struct {
 
 void PID_Position_Update(PID_t *p);
 void PID_Increase_Update(PID_t *p);
+void PID_Three_Update(PID_t *p);
+void PID_Two_Update(PID_t *p);
 
 #endif

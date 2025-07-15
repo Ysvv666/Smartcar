@@ -1,34 +1,51 @@
 #include "zf_common_headfile.h"
-int16 Left_PWM_Out;
-int16 Right_PWM_Out;
-#define Target_Speed  1180.0f
+#define Target_Speed  1800.0f
 //转向环Turn_t
 PID_t Turn_t = {					//外环PID结构体变量，定义的时候同时给部分成员赋初值
-	.Kp = 11.1f, 	  			  //比例项权重
-	.Ki = 0.0f,					    //积分项权重
-	.Kd = 3.6f,					    //微分项权重
-	.OutMax = 1100,				  //PID_Out输出限幅的最大值
-	.OutMin =-1100,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
-	.Target = 93,         	//目标值
+//误差三次平滑式PID
+	.Kpa = 0.002f, 	  			  //比例项权重（0.004f）
+	.Kpb = 13.0f, 	  			  //比例项权重（18.0f）
+	.Kd  = 12.5f,					    //角速度误差系数
+	.OutMax = 5000,				  //PID_Out输出限幅的最大值
+	.OutMin =-5000,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
+	.Target = 94,         	//目标值
+//普通位置式PID
+//	.Kp = 32.8f, 	  			  //比例项权重
+//	.Ki = 0.0001f,					//积分项权重
+//	.Kd = 11.3f,					  //微分项权重
+//	.OutMax = 1850,				  //PID_Out输出限幅的最大值
+//	.OutMin =-1850,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
+//	.Target = 94,         	//目标值
+	//思路：Kp变大->反应太快摇摆 Kp小了反应不及时，    调限幅！！！
+};
+//左右轮速度补偿环
+PID_t Speed_BuChang_t={
+	.Kp = 0.14f, 	  			  //比例项权重
+	.Ki = 0.00f,					    //积分项权重
+	.Kd = 0.26f,					    //微分项权重
+	.OutMax = 2500.0f,				  //PID_Out输出限幅的最大值
+	.OutMin =-2500.0f,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
+	.Target = Target_Speed,       	//目标值,编码器
+//	.I_Limit= 3700.0f,
 };
 //速度环Speed
 PID_t Speed_l = {					//外环PID结构体变量，定义的时候同时给部分成员赋初值
-	.Kp = 0.12f, 	  			  //比例项权重
-	.Ki = 0.365f,					    //积分项权重
-	.Kd = 0.23f,					    //微分项权重
-	.OutMax = 2000.0f,				  //PID_Out输出限幅的最大值
-	.OutMin =-2000.0f,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
+	.Kp = 0.14f, 	  			  //比例项权重
+	.Ki = 0.40f,					    //积分项权重
+	.Kd = 0.26f,					    //微分项权重
+	.OutMax = 2500.0f,				  //PID_Out输出限幅的最大值
+	.OutMin =-2500.0f,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
 	.Target = Target_Speed,       	//目标值,编码器
-	.I_Limit= 2500.0f,
+	.I_Limit= 3700.0f,
 };
 PID_t Speed_r = {					//外环PID结构体变量，定义的时候同时给部分成员赋初值
-	.Kp = 0.12f, 	  			  //比例项权重
-	.Ki = 0.395f,					    //积分项权重
-	.Kd = 0.25f,					    //微分项权重
-	.OutMax = 2000.0f,				  //PID_Out输出限幅的最大值
-	.OutMin =-2000.0f,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
-	.Target = Target_Speed,       	//目标值
-	.I_Limit= 2000.0f,
+	.Kp = 0.14f, 	  			  //比例项权重
+	.Ki = 0.35f,					    //积分项权重
+	.Kd = 0.27f,					    //微分项权重
+	.OutMax = 2700.0f,				  //PID_Out输出限幅的最大值
+	.OutMin =-2700.0f,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
+	.Target = Target_Speed,       	//目标值,编码器
+	.I_Limit= 3800.0f,
 };
 /*速度环测试********************
 //Left_PWM_Out = Speed_l.Out;
@@ -94,10 +111,12 @@ void All_Init(){
  */
 //		pit_ms_init(TIM2_PIT, 10); 	 //定时器中断2用于按键处理       10ms
 		pit_ms_init(TIM6_PIT, 100);	 //定时器中断6用于编码器获取速度数据 100ms
+		pit_ms_init(TIM7_PIT, 5);	 		//定时器中断6用于编码器获取速度数据 100ms
 //		interrupt_set_priority(TIM2_IRQn, 0);//设置中断2优先级
 		interrupt_set_priority(TIM6_IRQn, 1);//设置中断6优先级
+		interrupt_set_priority(TIM7_IRQn, 2);//设置中断6优先级
 //显示菜单
-    menu_display();
+//    menu_display();
 }
 int main(void)
 {
@@ -109,29 +128,6 @@ int main(void)
 						image_process();
 						mt9v03x_finish_flag = 0;
 				}
-				if( YueJie_flag==0 && Motor_Protection_flag==0){  //正常循迹
-						Turn_t.Actual =ZhongZhi;		      
-						PID_Position_Update(&Turn_t);		
-						PID_Position_Update(&Speed_l);	
-						PID_Position_Update(&Speed_r);
-						Left_PWM_Out =-Turn_t.Out*3+Speed_l.Out;//加权pid
-						Right_PWM_Out= Turn_t.Out*3+Speed_r.Out;//加权pid
-					
-						Motor_Left_PWM (Left_PWM_Out );
-						Motor_Right_PWM(Right_PWM_Out);
-
-						ips200_show_string (MT9V03X_W,184,"L_PWM");
-						ips200_show_int   (MT9V03X_W,200,Left_PWM_Out, 4);
-						ips200_show_string (MT9V03X_W,216,"R_PWM");
-						ips200_show_int   (MT9V03X_W,232,Right_PWM_Out,4);
-						
-						pid_flag=0;
-				}
-				else if(YueJie_flag==1 || Motor_Protection_flag==1){//当越界了或者电机过快的时候
-						Motor_Left_PWM (0);
-						Motor_Right_PWM(0);
-				}
-
 		}
 }
 /*图像函数

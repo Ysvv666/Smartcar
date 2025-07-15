@@ -5,11 +5,11 @@
   * @retval 无
   */
 void Buzzer_On_Count(uint8 Count){
-    if(Count>0){
+    while(Count>0){
         gpio_set_level(BUZZER, GPIO_HIGH);
-				system_delay_ms(200);
+				system_delay_ms(150);
 			  gpio_set_level(BUZZER, GPIO_LOW);
-				system_delay_ms(200);
+				system_delay_ms(150);
         Count--;
     }
 }

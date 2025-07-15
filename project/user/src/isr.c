@@ -111,8 +111,6 @@ void TIM6_IRQHandler (void)
 		encoder_clear_count(TIM4_ENCODER);
 //************************************
 	
-				Speed_l.Actual=en_speed1;
-				Speed_r.Actual=en_speed2;
 
 
 //************屏幕最底下显示数据************
@@ -132,12 +130,54 @@ void TIM6_IRQHandler (void)
 // 函数简介     TIM7 的定时器中断服务函数 启动 .s 文件定义 不允许修改函数名称
 //              默认优先级 修改优先级使用 interrupt_set_priority(TIM7_IRQn, 1);
 //-------------------------------------------------------------------------------------------------------------------
-
+extern PID_t Turn_t ;
+extern PID_t Speed_l ;
+extern PID_t Speed_r ;
+extern PID_t Speed_BuChang_t ;
+int16 Left_PWM_Out;
+int16 Right_PWM_Out;
 void TIM7_IRQHandler (void)
 {		
+		if(pid_flag==1){
     // 此处编写用户代码
+				if(YueJie_flag==0 && Motor_Protection_flag==0 && Buzzer_Stop_flag==0){  //正常循迹
+						//更新转向环
+						Turn_t.Actual =ZhongZhi;
+						PID_Three_Update(&Turn_t);							 //误差三次方pid 还差个陀螺仪
+						//更新速度环
+						Speed_l.Actual=en_speed1;
+						Speed_r.Actual=en_speed2;
+						float Handle_Speed=HandleSpeed(ZhongZhi);//直道1800，弯道降速到1000
+						Speed_l.Target=Handle_Speed;
+						Speed_r.Target=Handle_Speed;
+						PID_Position_Update(&Speed_l);	
+						PID_Position_Update(&Speed_r);
+//						//更新左右轮速度差环（速度追赶机制）
+//						Speed_BuChang_t.Actual=en_speed1-en_speed2;
+//						PID_Position_Update(&Speed_BuChang_t);	
+//						//串级PID
+//						Left_PWM_Out =Speed_l.Out - Turn_t.Out - Speed_BuChang_t.Out;
+//						Right_PWM_Out=Speed_r.Out + Turn_t.Out + Speed_BuChang_t.Out;
+						//串级PID
+						Left_PWM_Out =Speed_l.Out - Turn_t.Out ;
+						Right_PWM_Out=Speed_r.Out + Turn_t.Out ;
+						//PID输出
+						Motor_Left_PWM (Left_PWM_Out );
+						Motor_Right_PWM(Right_PWM_Out);
+						//显示输出值
+						ips200_show_string (110,256,"L_PWM:");
+						ips200_show_int   (158,256,Left_PWM_Out, 4);
+						ips200_show_string (110,288,"R_PWM:");
+						ips200_show_int   (158,288,Right_PWM_Out,4);
+				}
+				else if(YueJie_flag==1 || Motor_Protection_flag==1 || Buzzer_Stop_flag==1){//1.越界了2.电机过快3.过斑马线
+						Motor_Left_PWM (0);
+						Motor_Right_PWM(0);
+				}
 
     // 此处编写用户代码
+			pid_flag=0;
+		}
     TIM7->SR &= ~TIM7->SR;// 清空中断状态
 }
 
