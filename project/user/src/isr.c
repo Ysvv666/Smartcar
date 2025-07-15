@@ -95,34 +95,89 @@ int32 en_location1;
 int32 en_location2;
 extern PID_t Speed_l;
 extern PID_t Speed_r;
+uint8 count1=0;
+uint8 count2=0;
+int16 Left_PWM_Out;
+int16 Right_PWM_Out;
+extern PID_t Turn_t;
+
 void TIM6_IRQHandler (void)
 {
+		count1++;
+		count2++;
+//100ms更新速度环 (//速度决策) 
+		if(count2>100){
 //************编码器1(左轮)**************
 		encoder1=encoder_get_count(TIM3_ENCODER);
 		en_speed1=encoder1;
 		en_location1+=encoder1;
 		encoder_clear_count(TIM3_ENCODER);
 //************************************
-	
+
 //************编码器2(右轮)**************
 		encoder2=encoder_get_count(TIM4_ENCODER);
 		en_speed2=(-encoder2);//-是因为极性问题
 		en_location2+=(-encoder2);//-是因为极性问题
 		encoder_clear_count(TIM4_ENCODER);
 //************************************
-	
-
-
+		Speed_l.Actual=en_speed1;
+		Speed_r.Actual=en_speed2;
+//				float Handle_Speed=HandleSpeed(ZhongZhi);//直道1800，弯道降速到900
+//				Speed_l.Target=Handle_Speed;
+//				Speed_r.Target=Handle_Speed;
+		PID_Position_Update(&Speed_l);	
+		PID_Position_Update(&Speed_r);
+		count2=0;
 //************屏幕最底下显示数据************
-		ips200_show_string(0, 256,"Speed1:");
-		ips200_show_int(56, 256, en_speed1, 5);
-		ips200_show_string(0, 272,"Location1:");
-		ips200_show_int(80, 272, en_location1, 6);
-		ips200_show_string(0, 288,"Speed2:");
-		ips200_show_int(56, 288, en_speed2, 5);
-		ips200_show_string(0, 304,"Location2:");
-		ips200_show_int(80, 304, en_location2, 6);
-//*************************************
+//		ips200_show_string(0, 256,"Speed1:");
+//		ips200_show_int(56, 256, en_speed1, 5);
+//		ips200_show_string(0, 272,"Location1:");
+//		ips200_show_int(80, 272, en_location1, 6);
+//		ips200_show_string(0, 288,"Speed2:");
+//		ips200_show_int(56, 288, en_speed2, 5);
+//		ips200_show_string(0, 304,"Location2:");
+//		ips200_show_int(80, 304, en_location2, 6);
+//***************************************
+		}
+//1ms更新转向环PID
+		if(count1>=1){
+				if(pid_flag==1){
+						if(YueJie_flag==0 && Motor_Protection_flag==0 && Buzzer_Stop_flag==0){  //正常循迹
+								//更新转向环
+								Turn_t.Actual =ZhongZhi;
+		//						PID_Three_Update(&Turn_t);								 //误差三次方pid 还差个陀螺仪
+		//						PID_KpTwo_Update(&Turn_t);									//Kp平滑分段pid					
+								PID_Position_Update(&Turn_t);								 //普通位置式pid
+		//						//更新左右轮速度差环（速度追赶机制）
+		//						Speed_BuChang_t.Actual=en_speed1-en_speed2;
+		//						PID_Position_Update(&Speed_BuChang_t);	
+		//						//串级PID
+		//						Left_PWM_Out =Speed_l.Out - Turn_t.Out - Speed_BuChang_t.Out;
+		//						Right_PWM_Out=Speed_r.Out + Turn_t.Out + Speed_BuChang_t.Out;
+								//串级PID
+								Left_PWM_Out =Speed_l.Out - Turn_t.Out ;
+								Right_PWM_Out=Speed_r.Out + Turn_t.Out ;
+//								Left_PWM_Out = - Turn_t.Out ;
+//								Right_PWM_Out= + Turn_t.Out ;
+								//PID输出
+								if(Left_PWM_Out<0)Left_PWM_Out=0;
+								if(Right_PWM_Out<0)Right_PWM_Out=0;
+								Motor_Left_PWM (Left_PWM_Out );
+								Motor_Right_PWM(Right_PWM_Out);
+								//显示输出值
+//								ips200_show_string (110,256,"L_PWM:");
+//								ips200_show_int   (158,256,Left_PWM_Out, 4);
+//								ips200_show_string (110,288,"R_PWM:");
+//								ips200_show_int   (158,288,Right_PWM_Out,4);
+						}
+						else if(YueJie_flag==1 || Motor_Protection_flag==1 || Buzzer_Stop_flag==1){//1.越界了2.电机过快3.过斑马线
+								Motor_Left_PWM (0);
+								Motor_Right_PWM(0);
+						}
+						pid_flag=0;		
+				}
+				count1=0;
+		}
     TIM6->SR &= ~TIM6->SR;// 清空中断状态                                                
 }
 
@@ -130,58 +185,26 @@ void TIM6_IRQHandler (void)
 // 函数简介     TIM7 的定时器中断服务函数 启动 .s 文件定义 不允许修改函数名称
 //              默认优先级 修改优先级使用 interrupt_set_priority(TIM7_IRQn, 1);
 //-------------------------------------------------------------------------------------------------------------------
-extern PID_t Turn_t ;
-extern PID_t Speed_l ;
-extern PID_t Speed_r ;
-extern PID_t Speed_BuChang_t ;
-int16 Left_PWM_Out;
-int16 Right_PWM_Out;
-void TIM7_IRQHandler (void)
-{		
-		if(pid_flag==1){
-    // 此处编写用户代码
-				if(YueJie_flag==0 && Motor_Protection_flag==0 && Buzzer_Stop_flag==0){  //正常循迹
-						//更新转向环
-						Turn_t.Actual =ZhongZhi;
-//						PID_Three_Update(&Turn_t);							 //误差三次方pid 还差个陀螺仪
-//						PID_KpTwo_Update(&Turn_t);								//Kp平滑分段pid					
-						PID_Position_Update(&Turn_t);						 //普通位置式pid
-						//更新速度环
-						Speed_l.Actual=en_speed1;
-						Speed_r.Actual=en_speed2;
-						float Handle_Speed=HandleSpeed(ZhongZhi);//直道1800，弯道降速到900
-						Speed_l.Target=Handle_Speed;
-						Speed_r.Target=Handle_Speed;
-						PID_Position_Update(&Speed_l);	
-						PID_Position_Update(&Speed_r);
-//						//更新左右轮速度差环（速度追赶机制）
-//						Speed_BuChang_t.Actual=en_speed1-en_speed2;
-//						PID_Position_Update(&Speed_BuChang_t);	
-//						//串级PID
-//						Left_PWM_Out =Speed_l.Out - Turn_t.Out - Speed_BuChang_t.Out;
-//						Right_PWM_Out=Speed_r.Out + Turn_t.Out + Speed_BuChang_t.Out;
-						//串级PID
-						Left_PWM_Out =Speed_l.Out - Turn_t.Out ;
-						Right_PWM_Out=Speed_r.Out + Turn_t.Out ;
-						//PID输出
-						if(Left_PWM_Out<0)Left_PWM_Out=0;
-						if(Right_PWM_Out<0)Right_PWM_Out=0;
-						Motor_Left_PWM (Left_PWM_Out );
-						Motor_Right_PWM(Right_PWM_Out);
-						//显示输出值
-						ips200_show_string (110,256,"L_PWM:");
-						ips200_show_int   (158,256,Left_PWM_Out, 4);
-						ips200_show_string (110,288,"R_PWM:");
-						ips200_show_int   (158,288,Right_PWM_Out,4);
-				}
-				else if(YueJie_flag==1 || Motor_Protection_flag==1 || Buzzer_Stop_flag==1){//1.越界了2.电机过快3.过斑马线
-						Motor_Left_PWM (0);
-						Motor_Right_PWM(0);
-				}
 
-    // 此处编写用户代码
-			pid_flag=0;
-		}
+void TIM7_IRQHandler (void)
+{		  
+		// 此处编写用户代码
+//		mpu6050_get_acc();     // 获取 MPU6050 的加速度测量数值
+//    mpu6050_get_gyro();    // 获取 MPU6050 的角速度测量数值	
+//		ips200_show_string(0, 16,"acc_x:");
+//		ips200_show_int(48, 16,mpu6050_acc_x, 5);
+//		ips200_show_string(0, 32,"acc_y:");
+//		ips200_show_int(48, 32,mpu6050_acc_y, 5);
+//		ips200_show_string(0, 48,"acc_z:");
+//		ips200_show_int(48, 48,mpu6050_acc_z, 5);
+//	
+//		ips200_show_string(96, 16,"gyro_x:");
+//		ips200_show_int(152, 16,mpu6050_gyro_x, 5);
+//		ips200_show_string(96, 32,"gyro_y:");
+//		ips200_show_int(152, 32,mpu6050_gyro_y, 5);
+//		ips200_show_string(96, 48,"gyro_z:");
+//		ips200_show_int(152, 48,mpu6050_gyro_z, 5);
+		// 此处编写用户代码
     TIM7->SR &= ~TIM7->SR;// 清空中断状态
 }
 

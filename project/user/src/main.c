@@ -1,5 +1,5 @@
 #include "zf_common_headfile.h"
-#define Target_Speed  1200.0f
+#define Target_Speed  1400.0f
 //转向环Turn_t
 PID_t Turn_t = {					//外环PID结构体变量，定义的时候同时给部分成员赋初值
 //误差三次平滑式PID
@@ -10,12 +10,13 @@ PID_t Turn_t = {					//外环PID结构体变量，定义的时候同时给部分
 //	.OutMin =-3000,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
 //	.Target = 94,         	//目标值
 //普通位置式PID
-	.Kp = 64.0f, 	  			  //比例项权重
-	.Ki = 0.0f,					//积分项权重
-	.Kd = 10.0f,					  //微分项权重
-	.OutMax = 1850,				  //PID_Out输出限幅的最大值
-	.OutMin =-1850,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
-	.Target = 94,         	//目标值
+	.Kp = 108.5f, 	  			  //比例项权重
+	.Ki = 0.1f,					//积分项权重
+	.Kd = 3.7f,					  //微分项权重
+	.OutMax = 5400.0f,				  //PID_Out输出限幅的最大值
+	.OutMin =-5400.0f,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
+	.Target = 94.0f,         	//目标值
+	.I_Limit= 500.0f,
 };
 //左右轮速度补偿环
 PID_t Speed_BuChang_t={
@@ -103,17 +104,20 @@ void All_Init(){
 //编码器初始化
 		encoder_quad_init(TIM3_ENCODER, TIM3_ENCODER_CH1_B4, TIM3_ENCODER_CH2_B5);//encoder1
 		encoder_quad_init(TIM4_ENCODER, TIM4_ENCODER_CH1_B6, TIM4_ENCODER_CH2_B7);//encoder2
+//陀螺仪初始化
+		mpu6050_init();
+		gpio_init(C3, GPI, GPIO_HIGH,  GPI_FLOATING_IN );  // 配置XDA为浮空输入模式防止干扰
 //定时中断初始化
 /*														     定时器3：编码器模式
  *															   定时器4：编码器模式
  *															   定时器5：电机PWM输出
  */
 //		pit_ms_init(TIM2_PIT, 10); 	 //定时器中断2用于按键处理       10ms
-		pit_ms_init(TIM6_PIT, 100);	 //定时器中断6用于编码器获取速度数据 100ms
-		pit_ms_init(TIM7_PIT, 5);	 		//定时器中断6用于编码器获取速度数据 100ms
+		pit_ms_init(TIM6_PIT, 1);	 //定时器中断6用于编码器获取速度和pid输出 1ms
+		pit_ms_init(TIM7_PIT, 10);	 		//定时器中断7用于陀螺仪获取数据 10ms
 //		interrupt_set_priority(TIM2_IRQn, 0);//设置中断2优先级
 		interrupt_set_priority(TIM6_IRQn, 1);//设置中断6优先级
-		interrupt_set_priority(TIM7_IRQn, 2);//设置中断6优先级
+		interrupt_set_priority(TIM7_IRQn, 2);//设置中断7优先级
 //显示菜单
 //    menu_display();
 }
