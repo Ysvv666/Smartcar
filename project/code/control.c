@@ -80,6 +80,16 @@ float HandleSpeed(uint8_t Zhongzhi) {
     
     return speed;
 }
+float My_HandleSpeed(uint8_t Zhongzhi) {
+    int error = abs(Zhongzhi - 94);
+		if(error<10)return 1400.0f;
+		else if(error>10 && error<20)return 1300.0f;
+		else if(error>20 && error<30)return 1200.0f;
+		else if(error>30 && error<40)return 1100.0f;
+		else if(error>40 && error<50)return 1000.0f;
+		else if(error>50 )return 950.0f;
+		return 950.0f;
+}
 float HandleKp(uint8_t Zhongzhi) {
     int error = abs(Zhongzhi - 94);
     // 二次函数系数计算，满足 f(0)=13, f(17)=46, 开口向上

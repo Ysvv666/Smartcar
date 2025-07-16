@@ -11,22 +11,17 @@ extern uint8_t  start_point_l[2];
 extern uint8_t  start_point_r[2];
 extern uint8_t  l_found;
 extern uint8_t  r_found;
+
 extern uint16_t points_l[USE_NUM][2];
 extern uint16_t points_r[USE_NUM][2];
 extern uint16_t dir_l[USE_NUM];
 extern uint16_t dir_r[USE_NUM];
-extern uint16_t data_statics_l;
-extern uint16_t data_statics_r;
-extern uint8_t  hightest;
-
 extern uint8_t  l_border[MT9V03X_H];
 extern uint8_t  r_border[MT9V03X_H];
 extern uint8_t  center_line[MT9V03X_H];
-
-extern uint8_t  YueJie_flag;
-extern uint8_t  Buzzer_ChuJie_flag;
-
-extern uint8 Buzzer_Stop_flag;
+extern uint16_t data_statics_l;
+extern uint16_t data_statics_r;
+extern uint8_t  hightest;
 
 extern uint8_t  QuanZhong[MT9V03X_H];
 extern uint8_t  Best_thrsod;
@@ -36,6 +31,10 @@ extern uint8_t  ZhongZhi;
 extern uint8_t  Image_Down; //图像下移距离
 extern uint16_t Sum_QuanZhong;
 extern uint16_t Sum_ZhongZhi;
+
+extern uint8_t  YueJie_flag;
+extern uint8_t  Buzzer_ChuJie_flag;
+extern uint8_t  Buzzer_Stop_flag;
 extern char     pid_flag;
 
 

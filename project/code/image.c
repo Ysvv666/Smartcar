@@ -17,7 +17,7 @@ int my_abs(int a){
   * @retval 最佳阈值
   */
 #define GRAY_SCALE 256
-#define ROI_Y_START  0                // ROI起始行（感兴趣区域）
+#define ROI_Y_START  32                // ROI起始行（感兴趣区域）
 #define ROI_Y_END MT9V03X_H           // ROI结束行
 #define MIN_GRAY_THRESHOLD 20         // 最小灰度阈值
 #define MAX_GRAY_THRESHOLD 230        // 最大灰度阈值
@@ -78,7 +78,7 @@ int OtsuThreshold(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int heig
   * @retval 无
   */
 void binarizeImage(unsigned char image[MT9V03X_H][MT9V03X_W], int width, int height, int threshold) {
-		for (int i = 0; i < height; i++) {
+		for (int i = 32; i < height; i++) {
 				for (int j = 0; j < width; j++) {
 						image[i][j] = (image[i][j] > threshold) ? 255 : 0;
 				}

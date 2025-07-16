@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\MM32F327X_G8P.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\MM32F327X_G8P.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6070001: Last Updated: Wed Jul 16 17:57:56 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6070001: Last Updated: Wed Jul 16 19:48:01 2025
 <BR><P>
 <H3>Maximum Stack Usage =       7608 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -800,7 +800,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[3d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM7_IRQHandler
 </UL>
 
-<P><STRONG><a name="[88]"></a>OtsuThreshold</STRONG> (Thumb, 796 bytes, Stack size 7400 bytes, image.o(.text.OtsuThreshold))
+<P><STRONG><a name="[88]"></a>OtsuThreshold</STRONG> (Thumb, 798 bytes, Stack size 7400 bytes, image.o(.text.OtsuThreshold))
 <BR><BR>[Stack]<UL><LI>Max Depth = 7488<LI>Call Chain = OtsuThreshold &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
@@ -1046,8 +1046,8 @@ Global Symbols
 <LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart_write_buffer
 <LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart_query_byte
 <LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_etr_init
-<LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_show_char
 <LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_set_region
+<LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_show_char
 </UL>
 
 <P><STRONG><a name="[72]"></a>debug_init</STRONG> (Thumb, 50 bytes, Stack size 32 bytes, zf_common_debug.o(.text.debug_init))
@@ -2159,8 +2159,8 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_show_gray_image
 <LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_draw_point
 <LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_clear
-<LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_show_char
 <LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_set_region
+<LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_show_char
 </UL>
 
 <P><STRONG><a name="[e8]"></a>ips200_write_8bit_data</STRONG> (Thumb, 166 bytes, Stack size 16 bytes, zf_device_ips200.o(.text.ips200_write_8bit_data))
@@ -2238,11 +2238,11 @@ Local Symbols
 <BR>[Address Reference Count : 1]<UL><LI> zf_device_mt9v03x.o(.text.mt9v03x_init)
 </UL>
 <P><STRONG><a name="[0]"></a>type_default_callback</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, zf_device_type.o(.text.type_default_callback))
-<BR>[Address Reference Count : 5]<UL><LI> zf_device_type.o(.text.set_camera_type)
-<LI> zf_device_type.o(.data.camera_uart_handler)
+<BR>[Address Reference Count : 5]<UL><LI> zf_device_type.o(.data.camera_uart_handler)
 <LI> zf_device_type.o(.data.camera_vsync_handler)
 <LI> zf_device_type.o(.data.camera_dma_handler)
 <LI> zf_device_type.o(.data.wireless_module_uart_handler)
+<LI> zf_device_type.o(.text.set_camera_type)
 </UL>
 <P><STRONG><a name="[fd]"></a>mt9v03x_write_word_sccb</STRONG> (Thumb, 50 bytes, Stack size 16 bytes, zf_device_config.o(.text.mt9v03x_write_word_sccb))
 <BR><BR>[Stack]<UL><LI>Max Depth = 920<LI>Call Chain = mt9v03x_write_word_sccb &rArr; soft_iic_sccb_write_register &rArr; soft_iic_send_data &rArr; soft_iic_wait_ack &rArr; debug_assert_handler &rArr; debug_output &rArr; sprintf
