@@ -97,6 +97,7 @@ extern PID_t Speed_l;
 extern PID_t Speed_r;
 uint8 count1=0;
 uint8 count2=0;
+uint8 countShow=0;
 int16 Left_PWM_Out;
 int16 Right_PWM_Out;
 extern PID_t Turn_t;
@@ -105,6 +106,7 @@ void TIM6_IRQHandler (void)
 {
 		count1++;
 		count2++;
+		countShow++;
 //100ms更新速度环 (//速度决策) 
 		if(count2>100){
 //************编码器1(左轮)**************
@@ -142,42 +144,49 @@ void TIM6_IRQHandler (void)
 //1ms更新转向环PID
 		if(count1>=1){
 				if(pid_flag==1){
-						if(YueJie_flag==0 && Motor_Protection_flag==0 && Buzzer_Stop_flag==0){  //正常循迹
-								//更新转向环
-								Turn_t.Actual =ZhongZhi;
-		//						PID_Three_Update(&Turn_t);								 //误差三次方pid 还差个陀螺仪
-		//						PID_KpTwo_Update(&Turn_t);									//Kp平滑分段pid					
-								PID_Position_Update(&Turn_t);								 //普通位置式pid
-		//						//更新左右轮速度差环（速度追赶机制）
-		//						Speed_BuChang_t.Actual=en_speed1-en_speed2;
-		//						PID_Position_Update(&Speed_BuChang_t);	
-		//						//串级PID
-		//						Left_PWM_Out =Speed_l.Out - Turn_t.Out - Speed_BuChang_t.Out;
-		//						Right_PWM_Out=Speed_r.Out + Turn_t.Out + Speed_BuChang_t.Out;
-								//串级PID
-								Left_PWM_Out =Speed_l.Out - Turn_t.Out ;
-								Right_PWM_Out=Speed_r.Out + Turn_t.Out ;
-//								Left_PWM_Out = - Turn_t.Out ;
-//								Right_PWM_Out= + Turn_t.Out ;
-								//PID输出
-								if(Left_PWM_Out<0)Left_PWM_Out=0;
-								if(Right_PWM_Out<0)Right_PWM_Out=0;
-								Motor_Left_PWM (Left_PWM_Out );
-								Motor_Right_PWM(Right_PWM_Out);
-								//显示输出值
-//								ips200_show_string (110,256,"L_PWM:");
-//								ips200_show_int   (158,256,Left_PWM_Out, 4);
-//								ips200_show_string (110,288,"R_PWM:");
-//								ips200_show_int   (158,288,Right_PWM_Out,4);
-						}
-						else if(YueJie_flag==1 || Motor_Protection_flag==1 || Buzzer_Stop_flag==1){//1.越界了2.电机过快3.过斑马线
-								Motor_Left_PWM (0);
-								Motor_Right_PWM(0);
-						}
+						//更新转向环
+						Turn_t.Actual =ZhongZhi;
+//						PID_Three_Update(&Turn_t);								 //误差三次方pid 还差个陀螺仪
+//						PID_KpTwo_Update(&Turn_t);									//Kp平滑分段pid					
+						PID_Position_Update(&Turn_t);								 //普通位置式pid
+//						//更新左右轮速度差环（速度追赶机制）
+//						Speed_BuChang_t.Actual=en_speed1-en_speed2;
+//						PID_Position_Update(&Speed_BuChang_t);	
 						pid_flag=0;		
 				}
 				count1=0;
 		}
+//1msPID输出
+		if(YueJie_flag==0 && Motor_Protection_flag==0 && Buzzer_Stop_flag==0){  //正常循迹4
+		//串级PID
+//				Left_PWM_Out =Speed_l.Out - Turn_t.Out - Speed_BuChang_t.Out;
+//				Right_PWM_Out=Speed_r.Out + Turn_t.Out + Speed_BuChang_t.Out;
+		//串级PID
+				Left_PWM_Out =Speed_l.Out - Turn_t.Out ;
+				Right_PWM_Out=Speed_r.Out + Turn_t.Out ;
+//				Left_PWM_Out =Speed_l.Out ;
+//				Right_PWM_Out=Speed_r.Out ;
+//				Left_PWM_Out = - Turn_t.Out ;
+//				Right_PWM_Out= + Turn_t.Out ;
+		//PID输出
+				if(Left_PWM_Out<0)Left_PWM_Out=0;
+				if(Right_PWM_Out<0)Right_PWM_Out=0;
+				Motor_Left_PWM (Left_PWM_Out );
+				Motor_Right_PWM(Right_PWM_Out);	
+		}
+		else if(YueJie_flag==1 || Motor_Protection_flag==1 || Buzzer_Stop_flag==1){//1.越界了2.电机过快3.过斑马线
+				Motor_Left_PWM (0);
+				Motor_Right_PWM(0);
+		}
+//		if(countShow>=100){
+////显示输出值
+//				ips200_show_string (110,256,"L_PWM:");
+//				ips200_show_int   (158,256,Left_PWM_Out, 4);
+//				ips200_show_string (110,288,"R_PWM:");
+//				ips200_show_int   (158,288,Right_PWM_Out,4);
+//			
+//				countShow=0;
+//		}
     TIM6->SR &= ~TIM6->SR;// 清空中断状态                                                
 }
 

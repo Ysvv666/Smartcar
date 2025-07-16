@@ -46,8 +46,8 @@ extern PID_t Turn_t;
 uint8 Motor_Protection_flag=0;
 void Motor_Protection(void)
 {
-    if(my_abs(en_speed1-en_speed2)>4000 ||
-		   en_speed1>4000 || en_speed2>4000){
+    if(my_abs(en_speed1-en_speed2)>6000||
+		   en_speed1>6000 || en_speed2>6000){
 				 if(Motor_Protection_flag==0){
 		//  			cargo=0;到时候再用
 					 	 //清除按键状态
