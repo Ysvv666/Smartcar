@@ -359,13 +359,12 @@ void search_l_r(uint16 break_flag, uint8 image[MT9V03X_H][MT9V03X_W], uint16 *l_
 
 				// 寻找左边界候选点
 				for (int i = 0; i < 8; i++) {
-						// 检查是否越界
+				// 检查是否越界
 						if (search_l[i][0] < 0 || search_l[i][0] >= MT9V03X_W || 
 								search_l[i][1] < 0 || search_l[i][1] >= MT9V03X_H) {
 								continue;
 						}
-						
-						// 检查是否为边界点：黑像素右侧是白像素
+				// 检查是否为边界点：黑像素右侧是白像素
 						if (image[search_l[i][1]][search_l[i][0]] == 0 && 
 								image[search_l[(i + 1) & 7][1]][search_l[(i + 1) & 7][0]] == 255) {
 								
@@ -428,7 +427,8 @@ void search_l_r(uint16 break_flag, uint8 image[MT9V03X_H][MT9V03X_W], uint16 *l_
 										center_r[1] = candidates_r[j][1];
 								}
 						}
-				} else {
+				} 
+				else {
 						// 没有找到候选点，回溯
 						if (r_data_statics > 1) {
 								r_data_statics--;
@@ -444,9 +444,13 @@ void search_l_r(uint16 break_flag, uint8 image[MT9V03X_H][MT9V03X_W], uint16 *l_
 						*hightest = (center_r[1] + center_l[1]) >> 1;
 						break;
 				}
+				//左右边界循迹到尽头中点--->终止********************************		
+				if (center_l[0] > 95 && center_l[1] < 60 )break;
+				if (center_r[0] < 93 && center_r[1] < 60 )break;
+
 				//左右边界相遇终止********************************		
-		*l_stastic = l_data_statics;
-		*r_stastic = r_data_statics;
+				*l_stastic = l_data_statics;
+				*r_stastic = r_data_statics;
 		}
 }
 /**
@@ -929,8 +933,8 @@ uint8_t ZhongZhi0=94;
 uint8_t ZhongZhi1=94;
 uint8_t ZhongZhi=94;
 uint8_t Image_Down=120; //图像下移距离
-uint32_t Sum_QuanZhong;
-uint32_t Sum_ZhongZhi;	
+uint16_t Sum_QuanZhong;
+uint16_t Sum_ZhongZhi;	
 char pid_flag;          //1时即可进入pid中断输出
 void image_process(void)
 {
@@ -961,40 +965,40 @@ void image_process(void)
 		}		
 //判断丢线条——即遇到十字****************************************************
 //判断十字并执行补线操作****************************************************
-//		myCross_fill();		
+		myCross_fill();		
 //保护处理**************************************************************	
-		Motor_Protection();//电机过热保护
+		Motor_Protection();//电机过热过快保护
 		ChuJie_Test(image_copy);//出界保护	
 		Stop_Test(image_copy);//斑马线处理
 //显示图像**************************************************************	
-//		ips200_show_gray_image(0, Image_Down, (const uint8 *)image_copy, MT9V03X_W, MT9V03X_H, MT9V03X_W, MT9V03X_H, Best_thrsod);
-//		for(i=0;i<data_statics_l;i++){//左边界
-//				ips200_draw_point(points_l[i][0]+1, points_l[i][1]+Image_Down, RGB565_BLUE);
-//		}
-//		for(i=0;i<data_statics_r;i++){//右边界
-//				ips200_draw_point(points_r[i][0]-1, points_r[i][1]+Image_Down, RGB565_RED);
-//		}
+		ips200_show_gray_image(0, Image_Down, (const uint8 *)image_copy, MT9V03X_W, MT9V03X_H, MT9V03X_W, MT9V03X_H, Best_thrsod);
+		for(i=0;i<data_statics_l;i++){//左边界
+				ips200_draw_point(points_l[i][0]+1, points_l[i][1]+Image_Down, RGB565_BLUE);
+		}
+		for(i=0;i<data_statics_r;i++){//右边界
+				ips200_draw_point(points_r[i][0]-1, points_r[i][1]+Image_Down, RGB565_RED);
+		}
 		for(i=0;i< MT9V03X_H-1;i++)
 		{
 				center_line[i]=(l_border[i]+r_border[i])/2;//求中线
-//				ips200_draw_point(center_line[i],i+Image_Down, RGB565_GREEN );   //显示起点 显示中线	
-//				if(l_border[i]+4>187)l_border[i]=183;
-//				if(r_border[i]-4<1)r_border[i]=5;
-//				ips200_draw_point(l_border[i]+4,i+Image_Down, RGB565_PURPLE);   //显示起点 显示中线	
-//				ips200_draw_point(r_border[i]-4,i+Image_Down, RGB565_PURPLE);   //显示起点 显示中线	
+				ips200_draw_point(center_line[i],i+Image_Down, RGB565_GREEN );   //显示起点 显示中线	
+				if(l_border[i]+4>187)l_border[i]=183;
+				if(r_border[i]-4<1)r_border[i]=5;
+				ips200_draw_point(l_border[i]+4,i+Image_Down, RGB565_PURPLE);   //显示起点 显示中线	
+				ips200_draw_point(r_border[i]-4,i+Image_Down, RGB565_PURPLE);   //显示起点 显示中线	
 		}
 //清零***************************************
 		Sum_ZhongZhi  = 0;
 		Sum_QuanZhong = 0;
 //加权计算中值
-		for(i=75;i>70;i--){
-				Sum_ZhongZhi +=center_line[i]*QuanZhong[i];   
-				Sum_QuanZhong+=QuanZhong[i];
+		for(i=82;i>77;i--){
+				Sum_ZhongZhi  += center_line[i]*QuanZhong[i];   
+				Sum_QuanZhong += QuanZhong[i];
 		}
-		ZhongZhi=(uint8_t)(Sum_ZhongZhi/Sum_QuanZhong);//这次中值
-//		ZhongZhi1=(uint8_t)(Sum_ZhongZhi/Sum_QuanZhong);//这次中值
-//		ZhongZhi=(uint8_t)((ZhongZhi1*95+ZhongZhi0*5)/100);//互补滤波得到输出中值
-//		ZhongZhi0=ZhongZhi;//记录上一次中值          加权中值
+//		ZhongZhi=(uint8_t)(Sum_ZhongZhi/Sum_QuanZhong);//这次中值
+		ZhongZhi1=(uint8_t)(Sum_ZhongZhi/Sum_QuanZhong);//这次中值
+		ZhongZhi=(uint8_t)((ZhongZhi1*95+ZhongZhi0*5)/100);//互补滤波得到输出中值
+		ZhongZhi0=ZhongZhi;//记录上一次中值          加权中值
 //		ZhongZhi=center_line[114];//单点
 //显示中值
 		ips200_show_string (MT9V03X_W,Image_Down,"Middle");

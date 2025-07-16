@@ -34,8 +34,8 @@ extern uint8_t  ZhongZhi0;
 extern uint8_t  ZhongZhi1;
 extern uint8_t  ZhongZhi;
 extern uint8_t  Image_Down; //图像下移距离
-extern uint32_t Sum_QuanZhong;
-extern uint32_t Sum_ZhongZhi;
+extern uint16_t Sum_QuanZhong;
+extern uint16_t Sum_ZhongZhi;
 extern char     pid_flag;
 
 
