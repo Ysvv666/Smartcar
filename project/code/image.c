@@ -370,7 +370,7 @@ void search_l_r(uint16 break_flag, uint8 image[MT9V03X_H][MT9V03X_W], uint16 *l_
 								
 								candidates_l[candidate_count_l][0] = search_l[i][0];
 								candidates_l[candidate_count_l][1] = search_l[i][1];
-								dir_l[l_data_statics - 1] = i; // 记录生长方向//l_data_statics在上面已经+1 所以这里-1
+								dir_l[l_data_statics - 1] = i; // 记录生长方向//l_data_statics在上面已经+1 所以这里-1表示第一个数据
 								candidate_count_l++;
 						}
 				}
@@ -503,7 +503,7 @@ void get_right(uint16 total_R)
 		//初始化
 		for(i=0;i<MT9V03X_H;i++)
 		{
-				r_border[i]=188-2;
+				r_border[i]=186;
 		}
 		for(j=0;j<total_R;j++)
 		{
@@ -568,30 +568,47 @@ void Stop_Test(uint8 image[MT9V03X_H][MT9V03X_W]){
 		}
 }	
 /**                    
+  * @brief 左边丢线
+  * @param 无
+  * @retval 左边丢线的数量
+  */
+uint8 Lost_Left(void){
+		uint8 Lost_Left_Sum=0;
+		uint8 i=0;
+		for(i=119;i>32;i--){
+				if(l_border[i]==1){
+						Lost_Left_Sum++;
+				}
+		}
+		return Lost_Left_Sum;
+}
+/**                    
+  * @brief 右边丢线
+  * @param 无
+  * @retval 左边丢线的数量
+  */
+uint8 Lost_Right(void){
+		uint8 Lost_Right_Sum=0;
+		uint8 i=0;
+		for(i=119;i>32;i--){
+				if(r_border[i]==186){
+						Lost_Right_Sum++;
+				}
+		}
+		return Lost_Right_Sum;
+}
+
+/**                    
   * @brief 判断十字
   * @param 无
   * @retval 无
   */
 uint8 Corss_flag=0;
 uint8 Judge_Cross(void){
-		uint8 DiuXian_Flag_lsum=0;
-		uint8 DiuXian_Flag_rsum=0;
-		uint8 i=0;
-		for(i=119;i>32;i--){
-				if(l_border[i]==1){
-						DiuXian_Flag_lsum++;
-				}
-				if(r_border[i]==188-2){
-						DiuXian_Flag_rsum++;
-				}			
-		}	
-		if(DiuXian_Flag_lsum>=40 && DiuXian_Flag_rsum>=40){
-	      Corss_flag=1;
-				return 1;
-		}else {
-				Corss_flag=0;
-				return 0;
-		}
+		uint8 leftlost=Lost_Right();
+		uint8 rightlost=Lost_Right();
+		if(leftlost>=32 && rightlost>=32)return 1;
+		return 0;
 }
 
 /**                    
@@ -611,7 +628,12 @@ void Get_Left_Up_Point(void){
         l_border[i-3]-l_border[i-2]<=3&&
         (l_border[i]-l_border[i+2])>=8&&
         (l_border[i]-l_border[i+3])>=10&&
-        (l_border[i]-l_border[i+4])>=10){           
+        (l_border[i]-l_border[i+4])>=10&&
+				image_copy[i-1][l_border[i]]==0&&//上面是黑色
+				image_copy[i+1][l_border[i]]==255&&//下面是白色
+				image_copy[i][l_border[i]-1]==0&&  //左面是黑色			
+				image_copy[i][l_border[i]+1]==255//右边是白色
+				){           
             left_up_point=i;
 						break;
         }
@@ -626,15 +648,20 @@ uint8 left_down_point=0;
 void Get_Left_down_Point(void){
 		left_down_point=0;
 		uint8 i=0;
-		for(int i=119-3;i>left_up_point+4;i--){
+		for(int i=119-4;i>left_up_point+4;i--){
         //点i下面2个连续相差不大并且点i与上面边3个点分别相差很大，认为有上左拐点
         if(left_down_point==0&&
         (l_border[i]-l_border[i+1])<=3&&
         (l_border[i+1]-l_border[i+2])<=3&&
         (l_border[i+2]-l_border[i+3])<=3&&
-        (l_border[i]-l_border[i-2])>=8&&//不从i-1开始防止噪声干扰
-        (l_border[i]-l_border[i-3])>=10&&
-        (l_border[i]-l_border[i-4])>=10){           
+        (l_border[i]-l_border[i-3])>=8&&//不从i-1开始防止噪声干扰
+        (l_border[i]-l_border[i-4])>=10&&
+        (l_border[i]-l_border[i-5])>=10&&
+				image_copy[i][l_border[i]+1]==255&&//右边是白色
+				image_copy[i-1][l_border[i]]==255&&//上面是白色
+				image_copy[i+1][l_border[i]]==255&&//下面是白色
+				image_copy[i][l_border[i]-1]==0  //左面是黑色			
+				){           
             left_down_point=i;
 						break;
         }
@@ -657,7 +684,13 @@ void Get_Right_Up_Point(void){
 				(r_border[i-2]-r_border[i-3])<=3&&
 				r_border[i+2]-r_border[i]>=8 &&
 				r_border[i+3]-r_border[i]>=10&&
-				r_border[i+4]-r_border[i]>=10){           
+				r_border[i+4]-r_border[i]>=10&&
+				image_copy[i-1][r_border[i]]==0&&//上面是黑色
+				image_copy[i+1][r_border[i]]==255&&//下面是白色
+				image_copy[i][r_border[i]-1]==255&&  //左面是白色			
+				image_copy[i][r_border[i]+1]==0//右边是黑色
+				
+				){           
             right_up_point=i;
 						break;
 
@@ -682,7 +715,13 @@ void Get_Right_down_Point(void){
         (r_border[i+3]-r_border[i+2])<=3&&
         (r_border[i-2]-r_border[i])>=8&&//不从i-1开始防止噪声干扰
         (r_border[i-3]-r_border[i])>=8&&
-        (r_border[i-4]-r_border[i])>=8){           
+        (r_border[i-4]-r_border[i])>=8&&
+				image_copy[i-1][r_border[i]]==255&&//上面是白色
+				image_copy[i+1][r_border[i]]==255&&//下面是白色
+				image_copy[i][r_border[i]-1]==255&&  //左面是白色			
+				image_copy[i][r_border[i]+1]==0//右边是黑色
+				
+				){           
             right_down_point=i;
 						break;
         }
@@ -998,15 +1037,15 @@ void image_process(void)
 		Sum_ZhongZhi  = 0;
 		Sum_QuanZhong = 0;
 //加权计算中值
-		for(i=82;i>77;i--){
+		for(i=82;i>80;i--){
 				Sum_ZhongZhi  += center_line[i]*QuanZhong[i];   
 				Sum_QuanZhong += QuanZhong[i];
 		}
-//		ZhongZhi=(uint8_t)(Sum_ZhongZhi/Sum_QuanZhong);//这次中值
+//			ZhongZhi=(uint8_t)(Sum_ZhongZhi/Sum_QuanZhong);//这次中值
 		ZhongZhi1=(uint8_t)(Sum_ZhongZhi/Sum_QuanZhong);//这次中值
 		ZhongZhi=(uint8_t)((ZhongZhi1*95+ZhongZhi0*5)/100);//互补滤波得到输出中值
 		ZhongZhi0=ZhongZhi;//记录上一次中值          加权中值
-//		ZhongZhi=center_line[114];//单点
+//			ZhongZhi=center_line[114];//单点
 //显示中值
 		ips200_show_string (MT9V03X_W,Image_Down,"Middle");
 		ips200_show_uint   (MT9V03X_W,16+Image_Down, ZhongZhi,3);
