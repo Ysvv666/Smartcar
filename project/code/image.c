@@ -445,9 +445,16 @@ void search_l_r(uint16 break_flag, uint8 image[MT9V03X_H][MT9V03X_W], uint16 *l_
 						break;
 				}
 				//左右边界循迹到尽头中点--->终止********************************		
-				if (center_l[0] > 95 && center_l[1] < 60 )break;
-				if (center_r[0] < 93 && center_r[1] < 60 )break;
-
+				if (center_l[0] > 95 && center_l[1] < 60 ){
+						center_l[0] = points_l[l_data_statics - 1][0];//x
+						center_l[1] = points_l[l_data_statics - 1][1];//y
+						l_data_statics--;
+				}
+				if (center_r[0] < 93 && center_r[1] < 60 ){
+						center_r[0] = points_r[r_data_statics - 1][0];//x
+						center_r[1] = points_r[r_data_statics - 1][1];//y
+						r_data_statics--;				
+				}
 				//左右边界相遇终止********************************		
 				*l_stastic = l_data_statics;
 				*r_stastic = r_data_statics;
