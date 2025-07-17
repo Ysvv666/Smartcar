@@ -3,11 +3,11 @@
 <title>Static Call Graph - [.\Objects\MM32F327X_G8P.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\MM32F327X_G8P.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6070001: Last Updated: Thu Jul 17 14:19:37 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6070001: Last Updated: Fri Jul 18 00:16:56 2025
 <BR><P>
 <H3>Maximum Stack Usage =       7568 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
-main &rArr; image_process &rArr; OtsuThreshold &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
+main &rArr; image_process &rArr; OtsuThreshold &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 <P>
 <H3>
 Mutually Recursive functions
@@ -395,8 +395,8 @@ Global Symbols
 <LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_double_round
 <LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_double_epilogue
 </UL>
-<BR>[Called By]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
-<LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OtsuThreshold
+<BR>[Called By]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OtsuThreshold
+<LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
 <LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_fp_digits
 <LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_drsub
 </UL>
@@ -550,8 +550,8 @@ Global Symbols
 <P><STRONG><a name="[115]"></a>__I$use$fp</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, iusefp.o(.text), UNUSED)
 
 <P><STRONG><a name="[5a]"></a>_float_round</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, fepilogue.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
-<LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fadd
+<BR><BR>[Called By]<UL><LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fadd
+<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
 </UL>
 
 <P><STRONG><a name="[59]"></a>_float_epilogue</STRONG> (Thumb, 92 bytes, Stack size 4 bytes, fepilogue.o(.text))
@@ -565,8 +565,8 @@ Global Symbols
 <P><STRONG><a name="[62]"></a>_double_round</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, depilogue.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = _double_round
 </UL>
-<BR>[Called By]<UL><LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
-<LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
+<BR>[Called By]<UL><LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
+<LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 <LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_double_epilogue
 </UL>
 
@@ -577,9 +577,9 @@ Global Symbols
 <LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_llsl
 <LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_double_round
 </UL>
-<BR>[Called By]<UL><LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
-<LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
+<BR>[Called By]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
+<LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
 </UL>
 
 <P><STRONG><a name="[6d]"></a>__aeabi_d2ulz</STRONG> (Thumb, 48 bytes, Stack size 0 bytes, dfixul.o(.text), UNUSED)
@@ -747,15 +747,15 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[87]"></a>OtsuThreshold</STRONG> (Thumb, 798 bytes, Stack size 7400 bytes, image.o(.text.OtsuThreshold))
-<BR><BR>[Stack]<UL><LI>Max Depth = 7488<LI>Call Chain = OtsuThreshold &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
+<BR><BR>[Stack]<UL><LI>Max Depth = 7488<LI>Call Chain = OtsuThreshold &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
-<BR>[Calls]<UL><LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
+<BR>[Calls]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
+<LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
+<LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
 <LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
 <LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dcmple
 <LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dcmpeq
-<LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
-<LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr8
 <LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 </UL>
@@ -931,8 +931,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 872<LI>Call Chain = camera_init &rArr; timer_etr_init &rArr; debug_assert_handler &rArr; debug_output &rArr; sprintf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;interrupt_set_priority
-<LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exti_init
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dma_camera_init
+<LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exti_init
 <LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_etr_init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mt9v03x_init
@@ -1272,10 +1272,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[ce]"></a>image_process</STRONG> (Thumb, 528 bytes, Stack size 64 bytes, image.o(.text.image_process))
-<BR><BR>[Stack]<UL><LI>Max Depth = 7552<LI>Call Chain = image_process &rArr; OtsuThreshold &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
+<BR><BR>[Stack]<UL><LI>Max Depth = 7552<LI>Call Chain = image_process &rArr; OtsuThreshold &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
-<BR>[Calls]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;binarizeImage
-<LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Stop_Test
+<BR>[Calls]<UL><LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Stop_Test
 <LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OtsuThreshold
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Protection
 <LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ChuJie_Test
@@ -1285,6 +1284,7 @@ Global Symbols
 <LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_start_point
 <LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_right
 <LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_left
+<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;binarizeImage
 </UL>
 <BR>[Called By]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -1303,8 +1303,8 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__NVIC_EnableIRQ
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pit_init
-<LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exti_init
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dma_camera_init
+<LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exti_init
 <LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart_rx_interrupt
 </UL>
 
@@ -1422,7 +1422,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[49]"></a>main</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, main.o(.text.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 7568<LI>Call Chain = main &rArr; image_process &rArr; OtsuThreshold &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
+<BR><BR>[Stack]<UL><LI>Max Depth = 7568<LI>Call Chain = main &rArr; image_process &rArr; OtsuThreshold &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;image_process
 <LI><a href="#[6f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;All_Init
@@ -1538,12 +1538,12 @@ Global Symbols
 <P><STRONG><a name="[78]"></a>pwm_init</STRONG> (Thumb, 636 bytes, Stack size 72 bytes, zf_driver_pwm.o(.text.pwm_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 856<LI>Call Chain = pwm_init &rArr; debug_assert_handler &rArr; debug_output &rArr; sprintf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
-<LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2uiz
-<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
+<BR>[Calls]<UL><LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ui2f
 <LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
 <LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_assert_handler
+<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
+<LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2uiz
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_funciton_check
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_clock_enable
 <LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;afio_init
@@ -1554,18 +1554,18 @@ Global Symbols
 <P><STRONG><a name="[82]"></a>pwm_set_duty</STRONG> (Thumb, 334 bytes, Stack size 56 bytes, zf_driver_pwm.o(.text.pwm_set_duty))
 <BR><BR>[Stack]<UL><LI>Max Depth = 840<LI>Call Chain = pwm_set_duty &rArr; debug_assert_handler &rArr; debug_output &rArr; sprintf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
-<LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2uiz
-<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
+<BR>[Calls]<UL><LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ui2f
 <LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
 <LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_assert_handler
+<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
+<LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2uiz
 </UL>
 <BR>[Called By]<UL><LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Right_PWM
 <LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Left_PWM
 </UL>
 
-<P><STRONG><a name="[d3]"></a>search_l_r</STRONG> (Thumb, 1404 bytes, Stack size 176 bytes, image.o(.text.search_l_r))
+<P><STRONG><a name="[d3]"></a>search_l_r</STRONG> (Thumb, 1986 bytes, Stack size 176 bytes, image.o(.text.search_l_r))
 <BR><BR>[Stack]<UL><LI>Max Depth = 188<LI>Call Chain = search_l_r &rArr; my_abs
 </UL>
 <BR>[Calls]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;my_abs
@@ -2095,9 +2095,9 @@ Local Symbols
 </UL>
 
 <P><STRONG><a name="[103]"></a>_fp_digits</STRONG> (Thumb, 366 bytes, Stack size 64 bytes, printfa.o(i._fp_digits), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
-<LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
+<BR><BR>[Calls]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
+<LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 <LI><a href="#[6c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
 <LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2ulz
 <LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdrcmple

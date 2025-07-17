@@ -101,10 +101,12 @@ int16 Left_PWM_Out;
 int16 Right_PWM_Out;
 extern PID_t Turn_t;
 extern PID_t Gyro_t;
-
+uint8 countData=0;
 void TIM6_IRQHandler (void)
 {
+		countData++;
 //100ms更新速度环 (//速度决策) 
+		if(countData>=10){
 //************编码器1(左轮)**************
 		encoder1=encoder_get_count(TIM3_ENCODER);
 		en_speed1=encoder1;
@@ -134,7 +136,8 @@ void TIM6_IRQHandler (void)
 //		ips200_show_int(56, 288, en_speed2, 5);
 //		ips200_show_string(0, 304,"Location2:");
 //		ips200_show_int(80, 304, en_location2, 6);
-//100ms获取陀螺仪数据***************************************
+		}
+//10ms获取陀螺仪数据***************************************
 		mpu6050_get_acc();     // 获取 MPU6050 的加速度测量数值
     mpu6050_get_gyro();    // 获取 MPU6050 的角速度测量数值
 //		ips200_show_string(0, 16,"gyro_x:");

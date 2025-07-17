@@ -5,18 +5,12 @@
 PID_t Turn_t = {					//外环PID结构体变量，定义的时候同时给部分成员赋初值
 //误差三次平滑式PID
 	.Kpa = 0.069f, 	  			  //比例项权重（0.004f）
-	.Kpb = 18.0f, 	  			  //比例项权重（18.0f）
+	.Kpb = 23.2f, 	  			  //比例项权重（18.0f）
 //	.Kpb = 45.5f, 	  			  //比例项权重（18.0f）
-	.Kd  = 0.141f,					    //角速度误差系数
+	.Kd  = 1.25f,					    //角速度误差系数
 	.OutMax = 7800,				  //PID_Out输出限幅的最大值
 	.OutMin =-7800,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
 	.Target = 94,         	//目标值
-//	.Kpa = 0.069f, 	  			  //比例项权重（0.004f）
-//	.Kpb = 45.5f, 	  			  //比例项权重（18.0f）
-//	.Kd  = 0.24f,					    //角速度误差系数
-//	.OutMax = 7800,				  //PID_Out输出限幅的最大值
-//	.OutMin =-7800,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
-//	.Target = 94,         	//目标值
 };
 //角速度环Gyro_t
 PID_t Gyro_t = {
@@ -121,7 +115,7 @@ void All_Init(){
  *															   定时器5：电机PWM输出
  */
 //		pit_ms_init(TIM2_PIT, 10); 	 //定时器中断2用于按键处理       10ms
-		pit_ms_init(TIM6_PIT, 100);	 //定时器中断6用于编码器获取速度和pid输出 1ms
+		pit_ms_init(TIM6_PIT, 10);	 //定时器中断6用于编码器获取速度和pid输出 10ms
 		pit_ms_init(TIM7_PIT, 1);	 		//定时器中断7用于陀螺仪获取数据 10ms
 //		interrupt_set_priority(TIM2_IRQn, 0);//设置中断2优先级
 		interrupt_set_priority(TIM6_IRQn, 1);//设置中断6优先级

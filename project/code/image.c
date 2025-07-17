@@ -401,8 +401,14 @@ void search_l_r(uint16 break_flag, uint8 image[MT9V03X_H][MT9V03X_W], uint16 *l_
 						center_l[1] = candidates_l[0][1];					
 						for (int j = 1; j < candidate_count_l; j++) {
 								if (candidates_l[j][1] < center_l[1]) {
-										center_l[0] = candidates_l[j][0];
-										center_l[1] = candidates_l[j][1];
+										if(candidates_l[j][0]!=points_l[l_data_statics-1][0] && candidates_l[j][1]!=points_l[l_data_statics-1][1]
+			              && candidates_l[j][0]!=points_l[l_data_statics-2][0] && candidates_l[j][1]!=points_l[l_data_statics-2][1]
+			              && candidates_l[j][0]!=points_l[l_data_statics-3][0] && candidates_l[j][1]!=points_l[l_data_statics-3][1]
+			              && candidates_l[j][0]!=points_l[l_data_statics-4][0] && candidates_l[j][1]!=points_l[l_data_statics-4][1]
+										){
+												center_l[0] = candidates_l[j][0];
+												center_l[1] = candidates_l[j][1];
+										}
 								}
 						}
 				} 
@@ -424,8 +430,14 @@ void search_l_r(uint16 break_flag, uint8 image[MT9V03X_H][MT9V03X_W], uint16 *l_
 						
 						for (int j = 1; j < candidate_count_r; j++) {
 								if (candidates_r[j][1] < center_r[1]) {
-										center_r[0] = candidates_r[j][0];
-										center_r[1] = candidates_r[j][1];
+										if(candidates_r[j][0]!=points_r[l_data_statics-1][0] && candidates_r[j][1]!=points_r[l_data_statics-1][1]
+			              && candidates_r[j][0]!=points_r[l_data_statics-2][0] && candidates_r[j][1]!=points_r[l_data_statics-2][1]
+			              && candidates_r[j][0]!=points_r[l_data_statics-3][0] && candidates_r[j][1]!=points_r[l_data_statics-3][1]
+			              && candidates_r[j][0]!=points_r[l_data_statics-4][0] && candidates_r[j][1]!=points_r[l_data_statics-4][1]
+										){
+												center_l[0] = candidates_r[j][0];
+												center_l[1] = candidates_r[j][1];
+										}
 								}
 						}
 				} 
@@ -515,6 +527,57 @@ void get_right(uint16 total_R)
 				else continue;
 		}
 }
+///************************************************************
+//最长白列
+//***********************************************************/
+//void Horizontal_line(void)
+//{
+//  uint8 i,j;
+//  if(Pixle[Row-1][Col/2]==0)
+//  {
+//    if(Pixle[Row-1][5]==white)
+//      midline[Row]=5;
+//    else if(Pixle[Row-1][Col-5]==white)
+//      midline[Row]=Col-5;
+//    else
+//      midline[Row]=Col/2;
+//  }
+//  else
+//	{
+//    midline[Row]=Col/2;		
+//	}
+//	
+//  for(i=Row-1;i>0;i--)
+//  {
+//    for(j=midline[i+1];j>=0;j--)
+//    {
+//      if(Pixle[i][j]==0||j==0)
+//      {
+//        leftline[i]=j;
+//        break;
+//      }
+//    }
+//    for(j=midline[i+1];j<=Col-1;j++)
+//    {
+//      if(Pixle[i][j]==0||j==Col-1)
+//      {
+//        rightline[i]=j;
+//        break;
+//      }
+//    }
+//    midline[i]=(leftline[i]+rightline[i])/2;
+//   if(Pixle[i-1][midline[i]]==0||i==0)
+//    {
+//   for(j=i;j>0;j--)
+//   {
+//    midline[j]=midline[i];
+//    leftline[j]=midline[i];
+//    rightline[j]=midline[i];
+//   }
+//      break;
+//    }
+//  }
+//}
 /**                    
   * @brief 出界紧急停止 取图像下面中间10*60个点
   * @param image 传入二维图像数组
@@ -604,14 +667,12 @@ uint8 Lost_Right(void){
   * @param 无
   * @retval 无
   */
-uint8 Corss_flag=0;
 uint8 Judge_Cross(void){
 		uint8 leftlost=Lost_Right();
-		uint8 rightlost=Lost_Right();
+		uint8 rightlost=Lost_Left();
 		if(leftlost>=30 && rightlost>=30)return 1;
 		return 0;
 }
-
 /**                    
 	* @brief 找左上拐点
   * @param 无
@@ -681,7 +742,6 @@ void Get_Right_Up_Point(void){
 		right_up_point=0;
 		uint8 i=0;
 		for(int i=32+6;i<120-4;i++){
-        //点i下面2个连续相差不大并且点i与上面边3个点分别相差很大，认为有上右拐点
         if(right_up_point==0&&
 				(r_border[i]-r_border[i-1])<=3&&
 				(r_border[i-1]-r_border[i-2])<=3&&
@@ -1068,9 +1128,209 @@ void myCross_fill(void){
 //显示当前标志位									
 				ips200_show_string(0, 16,"Cross_flag:");
 				ips200_show_uint(88, 16,Cross_flag, 2);
+		}else{//出十字的时候
+				ips200_show_string(0, 16,"Cross_flag:");
+				ips200_show_uint(88, 16,Cross_flag, 2);
 		}
 }
+/**                    
+  * @brief 判断一组边线是直道还是弯道
+	* @param *border 边线数组名
+	* @retval 1：直线，0：弯道
+  */
+uint8	Judge_ZhiXian(uint8 *border){
+		uint8 i=0;
+		for(i=96;i>86;i++){
+				if(my_abs(border[i]-border[i-32])>32){
+						return 0;//变化大 弯道
+				}
+		}
+		return 1;//默认返回为直道
+}
+/**                    
+  * @brief 判断圆环
+  * @param 无
+  * @retval 无
+  */
 
+uint8 Left_Circle_Flag=0;
+uint8 Right_Circle_Flag=0;
+void Judge_Circle(void){
+		uint8 leftlost=Lost_Left();
+		uint8 rightlost=Lost_Right();
+		if(leftlost>=30 || rightlost<=5 ){//左边丢线 可能是左环岛或者左弯道
+				if(Judge_ZhiXian(r_border)==1){//如果右边是直道 说明是左圆环
+						Left_Circle_Flag=1;
+						Buzzer_On_Count(1);
+				}
+		}
+		if(leftlost<=5  || rightlost>=30){//右边丢线 可能是右环岛或者右弯道
+				if(Judge_ZhiXian(l_border)==1){//如果左边是直道 说明是右圆环
+						Right_Circle_Flag=1;
+						Buzzer_On_Count(1);
+				}
+		}
+}
+/**                    
+  * @brief 找左圆环圆环最右端
+  * @param 无
+  * @retval 无
+  */
+uint8 left_circle_point=0;
+void Get_Left_Circle_Point(void){
+		left_circle_point=0;
+		uint8 i=0;
+		for(int i=119-5;i>32+5;i--){
+        if(left_circle_point==0&&
+        (l_border[i]-l_border[i+2])>=0&&
+        (l_border[i]-l_border[i+3])>=0&&
+        (l_border[i]-l_border[i+4])>=0&&
+        (l_border[i]-l_border[i-2])>=0&&
+        (l_border[i]-l_border[i-3])>=0&&
+        (l_border[i]-l_border[i-4])>=0&&
+				image_copy[i][l_border[i]-3]==0&&//左边是黑色	
+				image_copy[i][l_border[i]+3]==255//右边是白色
+				){           
+            left_circle_point=i;
+						break;    //找到就break 防止误判
+        }
+		}
+}
+	
+/**                    
+  * @brief 找右圆环圆环最左端
+  * @param 无
+  * @retval 无
+  */
+uint8 right_circle_point=0;
+void Get_Right_Circle_Point(void){
+		right_circle_point=0;
+		uint8 i=0;
+		for(int i=119-5;i>32+5;i--){
+        if(right_circle_point==0&&
+        (r_border[i]-r_border[i+2])<=0&&
+        (r_border[i]-r_border[i+3])<=0&&
+        (r_border[i]-r_border[i+4])<=0&&
+        (r_border[i]-r_border[i-2])<=0&&
+        (r_border[i]-r_border[i-3])<=0&&
+        (r_border[i]-r_border[i-4])<=0&&
+				image_copy[i][r_border[i]-3]==255&&//左边是白色			
+				image_copy[i][r_border[i]+3]==0    //右边是黑色
+				){           
+            right_circle_point=i;
+						break;    //找到就break 防止误判
+        }
+		}
+}
+/**                    
+  * @brief 圆环状态
+  * @param 无
+  * @retval 无
+  */
+void myCircle_fill(void){
+		uint8 Left_Circle_Status=0;
+		uint8 Right_Circle_Status=0;
+		Judge_Circle();
+//进入右圆环
+		if(Right_Circle_Flag==1){
+					uint8 Right_Circle_Status=1;//设置右圆环状态标志位
+					switch(Right_Circle_Status){//这里的switch函数主要用于判断进入下一状态的标志元素，判断到了就进入下一元素
+							case 1://第一阶段 识别到圆环 补线挡路
+									Get_Right_down_Point();//找右下拐点
+									if(right_down_point==0)Right_Circle_Status=2;break;//直到右下拐点消失进入第二状态
+							case 2://第二阶段 右下拐点消失 依旧补线挡路
+									Get_Right_Up_Point();//第二状态下会一直找右上黑色圆圈最左边进行拉线挡路,但是状态switch要一直判断右上拐点是否出现 一出现就进入第三状态
+									if(right_up_point!=0)  Right_Circle_Status=3;break;//直到找到右上拐点进入第三状态
+							case 3://第三状态 右上拐点出现 补线进环进入第三状态 入环！！！
+									Get_Right_Up_Point();//右上拐点一旦消失就进入下一状态即将如环ing
+									Get_Left_Up_Point();
+									if(right_up_point==0 && left_up_point!=0)Right_Circle_Status=4;break;
+							case 4://if左拐点消失那就进入循迹状态
+									Get_Left_Up_Point();
+									if(left_up_point==0)Right_Circle_Status=5;break;
+							case 5://找到左下拐点,拉线出环
+									Get_Left_down_Point();
+									if(left_down_point!=0)Right_Circle_Status=6;break;
+							case 6://左拐点消失 继续手动拉线出去
+									Get_Left_down_Point();
+									if(left_down_point==0)Right_Circle_Status=7;break;
+							case 7://发现右上拐点进入状态8
+									Get_Right_Up_Point();
+									if(right_up_point!=0)Right_Circle_Status=8;break;
+							case 8://右上拐点消失，出环！！！！
+									Get_Right_Up_Point();
+									if(right_up_point==0){
+											Right_Circle_Status=0;
+											Right_Circle_Flag=0;
+									}break;
+					}
+		}
+//处理右圆环
+		if(Right_Circle_Status==1){
+				Get_Right_down_Point();//找右下拐点				
+				right_down_point_draw_line (r_border[right_down_point] ,right_down_point);//拉线
+		}
+		if(Right_Circle_Status==2){ 
+				Get_Right_Circle_Point();//找到黑色圆圈最左端
+				right_draw_line(r_border[right_circle_point],right_circle_point,r_border[115],115);//直接从这个点拉到右道路右下角
+		}
+		if(Right_Circle_Status==3){ 
+				Get_Right_Up_Point();//switch找到右上拐点,那我也得赶紧找出来然后拉线入环！！
+				right_draw_line(r_border[right_up_point],right_up_point,l_border[115],115);//直接从这个点拉到左道路右下角
+		}
+		if(Right_Circle_Status==4){ 
+				Get_Left_Up_Point();//switch状态机发现右上拐点消失 左上拐点出现，那我就拉左拐点入环！！！
+				left_draw_line(l_border[left_up_point],left_up_point,l_border[115],115);//直接从这个点拉到左道路右下角
+		}
+		if(Right_Circle_Status==5){
+				//啥也不干
+		} 
+		if(Right_Circle_Status==6){//拉线出环
+				Get_Left_down_Point();
+				left_down_point_draw_line (l_border[left_down_point] ,left_down_point);//拉线
+		}
+		if(Right_Circle_Status==7){//拉线出环
+				left_draw_line(120,32,1,115);//直接从这个点拉到左道路右下角		
+		}
+		if(Right_Circle_Status==8){//发现右上拐点补线出环
+				Get_Right_Up_Point();
+				right_up_point_draw_line(r_border[right_up_point] ,right_up_point);//拉线
+		}
+//进入左圆环
+//		if(Left_Circle_Flag==1){
+//					uint8 left_Circle_Status=1;//设置左圆环状态标志位
+//					switch(left_Circle_Status){//这里的switch函数主要用于判断进入下一状态的标志元素，判断到了就进入下一元素
+//							case 1://第一阶段 识别到圆环 补线挡路
+//									Get_Left_down_Point();//找左下拐点
+//									if(left_down_point==0)left_Circle_Status=2;break;//直到左下拐点消失进入第二状态
+//							case 2://第二阶段 左下拐点消失 依旧补线挡路
+//									Get_Left_Up_Point();//第二状态下会一直找左上黑色圆圈最左边进行拉线挡路,但是状态switch要一直判断左上拐点是否出现 一出现就进入第三状态
+//									if(left_up_point!=0)  left_Circle_Status=3;break;//直到找到右上拐点进入第三状态
+//							case 3://第三状态时如果左上拐点出现 补线进环进入第三状态 入环！！！
+//									Get_Left_Up_Point();//右上拐点一旦消失就进入下一状态即将如环ing
+//									Get_Left_Up_Point();
+//									if(left_up_point==0 && left_up_point!=0)left_Circle_Status=4;break;
+//							case 4://if右拐点消失那就进入循迹状态
+//									Get_Right_Up_Point();
+//									if(right_up_point==0)left_Circle_Status=5;break;
+//							case 5://找到右下拐点,拉线出环
+//									Get_Right_down_Point();
+//									if(right_down_point!=0)left_Circle_Status=6;break;
+//							case 6://右下拐点消失 继续手动拉线出去
+//									Get_Right_down_Point();
+//									if(right_down_point==0)left_Circle_Status=7;break;
+//							case 7://发现左上拐点进入状态8
+//									Get_Left_Up_Point();
+//									if(left_up_point!=0)left_Circle_Status=8;break;
+//							case 8://左上拐点消失，出环！！！！
+//									Get_Left_Up_Point();
+//									if(left_up_point==0){
+//											left_Circle_Status=0;
+//											Left_Circle_Flag=0;
+//									}break;
+//					}
+//		}
+}
 /**                    
   * @brief 图像处理汇总
   * @param 无
@@ -1128,6 +1388,7 @@ void image_process(void)
 //判断丢线条——即遇到十字****************************************************
 //判断十字并执行补线操作****************************************************
 //		myCross_fill();		
+//		myCircle_fill();
 //保护处理**************************************************************	
 		Motor_Protection();//电机过热过快保护
 		ChuJie_Test(image_copy);//出界保护	
@@ -1153,7 +1414,7 @@ void image_process(void)
 		Sum_ZhongZhi  = 0;
 		Sum_QuanZhong = 0;
 //加权计算中值
-		for(i=82;i>80;i--){
+		for(i=80;i>78;i--){
 				Sum_ZhongZhi  += center_line[i]*QuanZhong[i];   
 				Sum_QuanZhong += QuanZhong[i];
 		}
