@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\MM32F327X_G8P.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\MM32F327X_G8P.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6070001: Last Updated: Thu Jul 17 10:18:57 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6070001: Last Updated: Thu Jul 17 13:43:35 2025
 <BR><P>
 <H3>Maximum Stack Usage =       7568 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -550,8 +550,8 @@ Global Symbols
 <P><STRONG><a name="[115]"></a>__I$use$fp</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, iusefp.o(.text), UNUSED)
 
 <P><STRONG><a name="[5a]"></a>_float_round</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, fepilogue.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fadd
-<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
+<BR><BR>[Called By]<UL><LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
+<LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fadd
 </UL>
 
 <P><STRONG><a name="[59]"></a>_float_epilogue</STRONG> (Thumb, 92 bytes, Stack size 4 bytes, fepilogue.o(.text))
@@ -730,9 +730,9 @@ Global Symbols
 <P><STRONG><a name="[83]"></a>Motor_Protection</STRONG> (Thumb, 208 bytes, Stack size 16 bytes, control.o(.text.Motor_Protection))
 <BR><BR>[Stack]<UL><LI>Max Depth = 848<LI>Call Chain = Motor_Protection &rArr; Buzzer_On_Count &rArr; system_delay_ms &rArr; debug_assert_handler &rArr; debug_output &rArr; sprintf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;my_abs
-<LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Buzzer_On_Count
+<BR>[Calls]<UL><LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Buzzer_On_Count
 <LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;key_clear_all_state
+<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;my_abs
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;image_process
 </UL>
@@ -988,8 +988,8 @@ Global Symbols
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart_write_buffer
 <LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart_query_byte
 <LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_etr_init
-<LI><a href="#[e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_show_char
 <LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_set_region
+<LI><a href="#[e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_show_char
 </UL>
 
 <P><STRONG><a name="[71]"></a>debug_init</STRONG> (Thumb, 50 bytes, Stack size 32 bytes, zf_common_debug.o(.text.debug_init))
@@ -1274,10 +1274,7 @@ Global Symbols
 <P><STRONG><a name="[ce]"></a>image_process</STRONG> (Thumb, 528 bytes, Stack size 64 bytes, image.o(.text.image_process))
 <BR><BR>[Stack]<UL><LI>Max Depth = 7552<LI>Call Chain = image_process &rArr; OtsuThreshold &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;image_filter
-<LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;image_draw_rectan
-<LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_start_point
-<LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_right
+<BR>[Calls]<UL><LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_right
 <LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_left
 <LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;binarizeImage
 <LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Stop_Test
@@ -1285,6 +1282,9 @@ Global Symbols
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Protection
 <LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ChuJie_Test
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;search_l_r
+<LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;image_filter
+<LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;image_draw_rectan
+<LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_start_point
 </UL>
 <BR>[Called By]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -1347,11 +1347,11 @@ Global Symbols
 <LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;system_delay_ms
 <LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gpio_init
 <LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;spi_init
-<LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_set_dir
-<LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_set_color
 <LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_write_command
 <LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_write_8bit_data
 <LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_debug_init
+<LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_set_dir
+<LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_set_color
 </UL>
 <BR>[Called By]<UL><LI><a href="#[6f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;All_Init
 </UL>
@@ -1538,11 +1538,11 @@ Global Symbols
 <P><STRONG><a name="[78]"></a>pwm_init</STRONG> (Thumb, 636 bytes, Stack size 72 bytes, zf_driver_pwm.o(.text.pwm_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 856<LI>Call Chain = pwm_init &rArr; debug_assert_handler &rArr; debug_output &rArr; sprintf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2uiz
+<BR>[Calls]<UL><LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
+<LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2uiz
 <LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ui2f
 <LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
-<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
 <LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_assert_handler
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_funciton_check
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_clock_enable
@@ -1554,11 +1554,11 @@ Global Symbols
 <P><STRONG><a name="[82]"></a>pwm_set_duty</STRONG> (Thumb, 334 bytes, Stack size 56 bytes, zf_driver_pwm.o(.text.pwm_set_duty))
 <BR><BR>[Stack]<UL><LI>Max Depth = 840<LI>Call Chain = pwm_set_duty &rArr; debug_assert_handler &rArr; debug_output &rArr; sprintf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2uiz
+<BR>[Calls]<UL><LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
+<LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2uiz
 <LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ui2f
 <LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
-<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
 <LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;debug_assert_handler
 </UL>
 <BR>[Called By]<UL><LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Right_PWM
@@ -1993,8 +1993,8 @@ Local Symbols
 <BR>[Calls]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;spi_write_16bit
 </UL>
 <BR>[Called By]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_clear
-<LI><a href="#[e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_show_char
 <LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_set_region
+<LI><a href="#[e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ips200_show_char
 </UL>
 
 <P><STRONG><a name="[e3]"></a>ips200_write_8bit_data</STRONG> (Thumb, 166 bytes, Stack size 16 bytes, zf_device_ips200.o(.text.ips200_write_8bit_data))

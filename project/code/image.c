@@ -446,12 +446,12 @@ void search_l_r(uint16 break_flag, uint8 image[MT9V03X_H][MT9V03X_W], uint16 *l_
 						break;
 				}
 				//************左/右边界循迹到尽头中点--->左/右边界停止爬线**************
-				if (center_l[0] > 95 && center_l[1] < 60 ){
+				if (center_l[0] >= 94 && center_l[1] < 60 ){
 						center_l[0] = points_l[l_data_statics - 1][0];//x
 						center_l[1] = points_l[l_data_statics - 1][1];//y
 						l_data_statics--;
 				}
-				if (center_r[0] < 93 && center_r[1] < 60 ){
+				if (center_r[0] <= 94 && center_r[1] < 60 ){
 						center_r[0] = points_r[r_data_statics - 1][0];//x
 						center_r[1] = points_r[r_data_statics - 1][1];//y
 						r_data_statics--;				
@@ -621,19 +621,21 @@ uint8 left_up_point=0;
 void Get_Left_Up_Point(void){
 		left_up_point=0;
 		uint8 i=0;
-		for(int i=32+4;i<120-4;i++){
+		for(int i=32+6;i<120-4;i++){
         //点i下面2个连续相差不大并且点i与上面边3个点分别相差很大，认为有上左拐点
         if(left_up_point==0&&
         l_border[i-1]-l_border[i]<=3&&
         l_border[i-2]-l_border[i-1]<=3&&
         l_border[i-3]-l_border[i-2]<=3&&
+        l_border[i-4]-l_border[i-3]<=3&&
+        l_border[i-5]-l_border[i-4]<=3&&
         (l_border[i]-l_border[i+2])>=5&&
         (l_border[i]-l_border[i+3])>=8&&
         (l_border[i]-l_border[i+4])>=8&&
-				image_copy[i-1][l_border[i]]==0&&//上面是黑色
-				image_copy[i+1][l_border[i]]==255&&//下面是白色
-				image_copy[i][l_border[i]-1]==0&&  //左面是黑色			
-				image_copy[i][l_border[i]+1]==255//右边是白色
+				image_copy[i-3][l_border[i]]==0&&//上面是黑色
+				image_copy[i+3][l_border[i]]==255&&//下面是白色
+				image_copy[i-3][l_border[i]-3]==0&&  //左上面是黑色			因为侧入的时候左边可能是白色 左上防止误判
+				image_copy[i][l_border[i]+3]==255//右边是白色
 				){           
             left_up_point=i;
 						break;
@@ -649,19 +651,20 @@ uint8 left_down_point=0;
 void Get_Left_down_Point(void){
 		left_down_point=0;
 		uint8 i=0;
-		for(int i=119-4;i>left_up_point+4;i--){
+		for(int i=119-5;i>left_up_point+4;i--){
         //点i下面2个连续相差不大并且点i与上面边3个点分别相差很大，认为有上左拐点
         if(left_down_point==0&&
         (l_border[i]-l_border[i+1])<=3&&
         (l_border[i+1]-l_border[i+2])<=3&&
         (l_border[i+2]-l_border[i+3])<=3&&
+        (l_border[i+3]-l_border[i+4])<=3&&
         (l_border[i]-l_border[i-3])>=5&&//不从i-1开始防止噪声干扰
         (l_border[i]-l_border[i-4])>=8&&
         (l_border[i]-l_border[i-5])>=8&&
-				image_copy[i][l_border[i]+1]==255&&//右边是白色
-				image_copy[i-1][l_border[i]]==255&&//上面是白色
-				image_copy[i+1][l_border[i]]==255&&//下面是白色
-				image_copy[i][l_border[i]-1]==0  //左面是黑色			
+				image_copy[i][l_border[i]+3]==255&&//右边是白色
+				image_copy[i-3][l_border[i]]==255&&//上面是白色
+				image_copy[i+3][l_border[i]]==255&&//下面是白色
+				image_copy[i+3][l_border[i]-3]==0  //左下面是黑色			
 				){           
             left_down_point=i;
 						break;
@@ -677,19 +680,21 @@ uint8 right_up_point=0;
 void Get_Right_Up_Point(void){
 		right_up_point=0;
 		uint8 i=0;
-		for(int i=32+4;i<120-4;i++){
+		for(int i=32+6;i<120-4;i++){
         //点i下面2个连续相差不大并且点i与上面边3个点分别相差很大，认为有上右拐点
         if(right_up_point==0&&
 				(r_border[i]-r_border[i-1])<=3&&
 				(r_border[i-1]-r_border[i-2])<=3&&
 				(r_border[i-2]-r_border[i-3])<=3&&
+				(r_border[i-3]-r_border[i-4])<=3&&
+				(r_border[i-4]-r_border[i-5])<=3&&
 				r_border[i+2]-r_border[i]>=5 &&
 				r_border[i+3]-r_border[i]>=8&&
 				r_border[i+4]-r_border[i]>=8&&
-				image_copy[i-1][r_border[i]]==0&&//上面是黑色
-				image_copy[i+1][r_border[i]]==255&&//下面是白色
-				image_copy[i][r_border[i]-1]==255&&  //左面是白色			
-				image_copy[i][r_border[i]+1]==0//右边是黑色
+				image_copy[i-3][r_border[i]]==0&&//上面是黑色
+				image_copy[i+3][r_border[i]]==255&&//下面是白色
+				image_copy[i][r_border[i]-3]==255&&  //左面是白色			
+				image_copy[i-3][r_border[i]+3]==0//右上边是黑色
 				
 				){           
             right_up_point=i;
@@ -708,19 +713,20 @@ uint8 right_down_point=0;
 void Get_Right_down_Point(void){
 		right_down_point=0;
 		uint8 i=0;
-		for(int i=119-3;i>right_up_point+4;i--){
+		for(int i=119-5;i>right_up_point+4;i--){
         //点i下面2个连续相差不大并且点i与上面边3个点分别相差很大，认为有上左拐点
         if(right_down_point==0&&
         (r_border[i+1]-r_border[i])<=3&&
         (r_border[i+2]-r_border[i+1])<=3&&
         (r_border[i+3]-r_border[i+2])<=3&&
+        (r_border[i+4]-r_border[i+3])<=3&&
         (r_border[i-2]-r_border[i])>=5&&//不从i-1开始防止噪声干扰
         (r_border[i-3]-r_border[i])>=8&&
         (r_border[i-4]-r_border[i])>=8&&
-				image_copy[i-1][r_border[i]]==255&&//上面是白色
-				image_copy[i+1][r_border[i]]==255&&//下面是白色
-				image_copy[i][r_border[i]-1]==255&&  //左面是白色			
-				image_copy[i][r_border[i]+1]==0//右边是黑色
+				image_copy[i-3][r_border[i]]==255&&//上面是白色
+				image_copy[i+3][r_border[i]]==255&&//下面是白色
+				image_copy[i][r_border[i]-3]==255&&  //左面是白色			
+				image_copy[i+3][r_border[i]+3]==0//右下边是黑色
 				
 				){           
             right_down_point=i;
@@ -731,34 +737,38 @@ void Get_Right_down_Point(void){
 /**
 	* @brief  左边补线
 	* @param  x1 起点x坐标
-	* @param  x2 终点x坐标
 	* @param  y1 起点y坐标
+	* @param  x2 终点x坐标
 	* @param  y2 终点y坐标
+  * @retval 无
 	*/
+//(x1,y1)--->(x2,y2)    y1<y2
 void left_draw_line(uint8 x1,uint8 y1,uint8 x2,uint8 y2)
-{
+{	
     uint8 hx;
     uint8 a1=y1;
     uint8 a2=y2;
-    //防止越界以及参数输入错误
-    if(y1>y2)
-    {
-        uint8 t=y1;
-        y1=y2;
-        y2=t;
-    }
-
+		uint8 i;
+		uint8 t;
+//防止输入越界
     if(x1>=186)x1=186;
     else if(x1<=2)x1=2;
     if(y1>=MT9V03X_H-3)y1=MT9V03X_H-3;
-    else if(y1<=2)y1=2;
+    else if(y1<=Image_Delete)y1=Image_Delete;
 
     if(x2>=186)x2=186;
     else if(x2<=2)x2=2;
     if(y2>=MT9V03X_H-3)y2=MT9V03X_H-3;
-    else if(y2<=2)y2=2;
-
-    for(uint8 i=a1;i<a2;i++)
+    else if(y2<=Image_Delete)y2=Image_Delete;
+//防止for循环范围错误、
+    if(a1>a2)//坐标互换
+    {
+        t=a1;
+        a1=a2;
+        a2=t;
+    }
+//计算斜率补线
+    for(i=a1;i<a2;i++)
     {
         hx=x1+(i-y1)*(x2-x1)/(y2-y1);//使用斜率补线
         //防止补线越界
@@ -768,133 +778,190 @@ void left_draw_line(uint8 x1,uint8 y1,uint8 x2,uint8 y2)
     }
 }
 /**
-	* @brief  右边补线(虽然和左边补线是一样的，但还是要分开，因为会有单边补线)
+	* @brief  右边补线
 	* @param  x1 起点x坐标
-	* @param  x2 终点x坐标
 	* @param  y1 起点y坐标
+	* @param  x2 终点x坐标
 	* @param  y2 终点y坐标
+  * @retval 无
 	*/
+//(x1,y1)--->(x2,y2)    y1<y2
 void right_draw_line(uint8 x1,uint8 y1,uint8 x2,uint8 y2)
-{
+{	
     uint8 hx;
     uint8 a1=y1;
     uint8 a2=y2;
-    //防止越界以及参数输入错误
-    if(y1>y2)
-    {
-        uint8 t=y1;
-        y1=y2;
-        y2=t;
-    }
-
-    if(x1>=MT9V03X_W-3)x1=MT9V03X_W-3;
+		uint8 i;
+		uint8 t;
+//防止输入越界
+    if(x1>=186)x1=186;
     else if(x1<=2)x1=2;
     if(y1>=MT9V03X_H-3)y1=MT9V03X_H-3;
-    else if(y1<=2)y1=2;
+    else if(y1<=Image_Delete)y1=Image_Delete;
 
-    if(x2>=MT9V03X_W-3)x2=MT9V03X_W-3;
+    if(x2>=186)x2=186;
     else if(x2<=2)x2=2;
     if(y2>=MT9V03X_H-3)y2=MT9V03X_H-3;
-    else if(y2<=2)y2=2;
-
-    for(uint8 i=a1;i<a2;i++)
+    else if(y2<=Image_Delete)y2=Image_Delete;
+//防止for循环范围错误、
+    if(a1>a2)//坐标互换
+    {
+        t=a1;
+        a1=a2;
+        a2=t;
+    }
+//计算斜率补线
+    for(i=a1;i<a2;i++)
     {
         hx=x1+(i-y1)*(x2-x1)/(y2-y1);//使用斜率补线
         //防止补线越界
-        if(hx>=MT9V03X_W-3)hx=MT9V03X_W-3;
-        else if(hx<=2)hx=2;
+        if(hx>=186)hx=186;
+        else if(hx<=1)hx=1;
+        r_border[i]=hx;
+    }
+}
+
+/**
+* @brief 最小二乘法
+* @param uint8 begin                输入起点
+* @param uint8 end                  输入终点
+* @param uint8 *border              输入需要计算斜率的边界首地址
+* @retval 返回说明
+*/
+float Slope_Calculate(uint8 begin, uint8 end, uint8 *border)
+{
+    float xsum = 0, ysum = 0, xysum = 0, x2sum = 0;
+    int16 i = 0;
+    float result = 0;
+    static float resultlast;
+ 
+    for (i = begin; i < end; i++)
+    {
+        xsum += i;
+        ysum += border[i];
+        xysum += i * (border[i]);
+        x2sum += i * i;
+ 
+    }
+    if ((end - begin)*x2sum - xsum * xsum) //判断除数是否为零
+    {
+        result = ((end - begin)*xysum - xsum * ysum) / ((end - begin)*x2sum - xsum * xsum);
+        resultlast = result;
+    }
+    else
+    {
+        result = resultlast;
+    }
+    return result;
+}
+/**
+	* @brief  左上单拐点补线
+	* @param  x1 起点x坐标
+	* @param  y1 起点y坐标
+  * @retval 无
+	*/
+//(x1,y1)--->(x2,y2)    y1<y2
+void left_up_point_draw_line(uint8 x1,uint8 y1)
+{	
+    uint8 hx;
+		uint8 i;
+		float k;
+		k=Slope_Calculate(left_up_point-10,left_up_point, l_border);
+//防止输入越界
+    if(x1>=186)x1=186;
+    else if(x1<=2)x1=2;
+    if(y1>=MT9V03X_H-3)y1=MT9V03X_H-3;
+    else if(y1<=Image_Delete)y1=Image_Delete;
+//计算斜率补线
+    for(i=y1;i<120;i++)
+    {
+        hx=x1+(i-y1)*k;//使用斜率补线
+        //防止补线越界
+        if(hx>=186)hx=186;
+        else if(hx<=1)hx=1;
+        l_border[i]=hx;
+    }
+}
+/**
+  * @brief  右上单拐点补线
+	* @param  x1 起点x坐标
+	* @param  y1 起点y坐标
+  * @retval 无
+	*/
+//(x1,y1)--->(x2,y2)    y1<y2
+void right_up_point_draw_line(uint8 x1,uint8 y1)
+{	
+    uint8 hx;
+		uint8 i;
+		float k;
+		k=Slope_Calculate(right_up_point-10,right_up_point, r_border);
+//防止输入越界
+    if(x1>=186)x1=186;
+    else if(x1<=2)x1=2;
+    if(y1>=MT9V03X_H-3)y1=MT9V03X_H-3;
+    else if(y1<=Image_Delete)y1=Image_Delete;
+//计算斜率补线
+    for(i=y1;i<120;i++)
+    {
+        hx=x1+(i-y1)*k;//使用斜率补线
+        //防止补线越界
+        if(hx>=186)hx=186;
+        else if(hx<=1)hx=1;
         r_border[i]=hx;
     }
 }
 /**
-	* @brief  左边界延长
-	* @param  start_point 延长起点
-	* @param  end_point   延长终点
+	* @brief  左下单拐点补线
+	* @param  x1 起点x坐标
+	* @param  y1 起点y坐标
+  * @retval 无
 	*/
-void lenthen_l_border(uint8 start_point,uint8 end_point)
-{
-    float k;
-    //防止越界
-    if(start_point>=MT9V03X_H-1)start_point=MT9V03X_H-1;
-    if(start_point<32)start_point=32;
-    if(end_point>=MT9V03X_H-1)end_point=MT9V03X_H-1;
-    if(end_point<32)end_point=32;
-    
-    if(end_point<start_point)
+void left_down_point_draw_line (uint8 x1,uint8 y1){
+    uint8 hx;
+		uint8 i;
+		float k;
+		k=Slope_Calculate(left_down_point,left_down_point+10, l_border);
+//防止输入越界
+    if(x1>=186)x1=186;
+    else if(x1<=2)x1=2;
+    if(y1>=MT9V03X_H-3)y1=MT9V03X_H-3;
+    else if(y1<=Image_Delete)y1=Image_Delete;
+//计算斜率补线
+    for(i=y1;i>32;i--)
     {
-        uint8 t=start_point;
-        start_point=end_point;
-        end_point=t;
-    }
-
-    if(start_point<=37)//起点过于靠上，直接连线
-    {
-        left_draw_line(l_border[start_point],start_point,l_border[end_point],end_point);
-    }
-    else
-    {
-        k=(float)(l_border[start_point]-l_border[start_point-4])/5.0;//斜率
-        for(uint8 i=start_point;i<=end_point;i++)
-        {
-            l_border[i]=l_border[start_point]+(int)(i-start_point)*k;//使用斜率延长
-
-            if(l_border[i]<1)//防止越界
-            {
-                l_border[i]=1;
-            }
-
-            if(l_border[i]>=MT9V03X_W-2)//防止越界
-            {
-                l_border[i]=MT9V03X_W-2;
-            }
-        }
+        hx=x1+(i-y1)*k;//使用斜率补线
+        //防止补线越界
+        if(hx>=186)hx=186;
+        else if(hx<=1)hx=1;
+        l_border[i]=hx;
     }
 }
 /**
-	* @brief  右边界延长
-	* @param  start_point 延长起点
-	* @param  end_point   延长终点
+	* @brief  左下单拐点补线
+	* @param  x1 起点x坐标
+	* @param  y1 起点y坐标
+  * @retval 无
 	*/
-void lenthen_r_border(uint8 start_point,uint8 end_point)
-{
-    float k;
-    //防止越界
-    if(start_point>=MT9V03X_H-1)start_point=MT9V03X_H-1;
-    if(start_point<32)start_point=32;
-    if(end_point>=MT9V03X_H-1)end_point=MT9V03X_H-1;
-    if(end_point<32)end_point=32;
-    
-    if(end_point<start_point)
+void right_down_point_draw_line (uint8 x1,uint8 y1){
+    uint8 hx;
+		uint8 i;
+		float k;
+		k=Slope_Calculate(right_down_point,right_down_point+10, r_border);
+//防止输入越界
+    if(x1>=186)x1=186;
+    else if(x1<=2)x1=2;
+    if(y1>=MT9V03X_H-3)y1=MT9V03X_H-3;
+    else if(y1<=Image_Delete)y1=Image_Delete;
+//计算斜率补线
+    for(i=y1;i>32;i--)
     {
-        uint8 t=start_point;
-        start_point=end_point;
-        end_point=t;
-    }
-
-    if(start_point<=5)//起点过于靠上，直接连线
-    {
-        left_draw_line(r_border[start_point],start_point,r_border[end_point],end_point);
-    }
-    else
-    {
-        k=(float)(r_border[start_point]-r_border[start_point-4])/5.0;//斜率
-        for(uint8 i=start_point;i<=end_point;i++)
-        {
-            r_border[i]=r_border[start_point]+(int)(i-start_point)*k;//使用斜率延长
-
-            if(r_border[i]<1)//防止越界
-            {
-                r_border[i]=1;
-            }
-            
-            if(r_border[i]>=MT9V03X_W-2)//防止越界
-            {
-                r_border[i]=MT9V03X_W-2;
-            }
-        }
+        hx=x1+(i-y1)*k;//使用斜率补线
+        //防止补线越界
+        if(hx>=186)hx=186;
+        else if(hx<=1)hx=1;
+        r_border[i]=hx;
     }
 }
-
 
 /**                    
   * @brief 十字补线
@@ -904,56 +971,103 @@ void lenthen_r_border(uint8 start_point,uint8 end_point)
 void myCross_fill(void){
 		uint8 Cross_flag=0;
 		if(Judge_Cross()){
-
+				Cross_flag=1;
 				Buzzer_On_Count(1);
 				Get_Left_Up_Point();
 				Get_Right_Up_Point();
-				if(left_up_point!=0 && right_up_point!=0){
+				Get_Left_down_Point();
+				Get_Right_down_Point();
+				//四个拐点都存在
+				if(left_up_point!=0 && right_up_point!=0 && left_down_point!=0 && right_down_point!=0){
 						Buzzer_On_Count(1);
-						Get_Left_down_Point();
-						Get_Right_down_Point();
-						Cross_flag=1;
-								if(left_down_point!=0 && right_down_point!=0)
-								{		
-										Buzzer_On_Count(1);
-										Cross_flag=11;
-										left_draw_line(l_border[left_up_point],left_up_point,l_border[left_down_point],left_down_point);//左边补线
-										right_draw_line(r_border[right_up_point],right_up_point,r_border[right_down_point],right_down_point);//右边补线								
-								}
-								else if(left_down_point!=0 && right_down_point==0)//如果左边有下拐点，右边没有
-								{
-										Buzzer_On_Count(1);
-										Cross_flag=12;
-										left_draw_line(l_border[left_up_point],left_up_point,l_border[left_down_point],left_down_point);//左边补线
-										lenthen_r_border(right_up_point-1,MT9V03X_H-2);//右边延长
-								}
-								else if(left_down_point==0 && right_down_point!=0)//如果左边有下拐点，右边没有
-								{
-										Buzzer_On_Count(1);
-										Cross_flag=13;
-										right_draw_line(r_border[right_up_point],right_up_point,r_border[right_down_point],right_down_point);//右边补线
-										lenthen_l_border(left_up_point-1,MT9V03X_H-2);//左边延长
-								}
-								else if(left_down_point==0 && right_down_point==0)
-								{
-										Buzzer_On_Count(1);
-										Cross_flag=14;
-										lenthen_l_border(left_up_point-1,MT9V03X_H-2);//左边延长
-										lenthen_r_border(right_up_point-1,MT9V03X_H-2);//右边延长
-								}
-//显示左右上下拐点
-						ips200_show_string(0, 32,"lu");
-						ips200_show_uint(88, 32,left_up_point, 2);
-						ips200_show_string(0, 48,"ld");
-						ips200_show_uint(88, 48,left_down_point, 2);
-						ips200_show_string(0, 64,"ru");
-						ips200_show_uint(88, 64,right_up_point, 2);
-						ips200_show_string(0, 80,"rd");
-						ips200_show_uint(88, 80,right_down_point, 2);
-//显示当前标志位									
-						ips200_show_string(0, 16,"Cross_flag:");
-						ips200_show_uint(88, 16,Cross_flag, 2);
+						Cross_flag=10;
+						left_draw_line(l_border[left_up_point],left_up_point,l_border[left_down_point],left_down_point);
+						right_draw_line(r_border[right_up_point],right_up_point,r_border[right_down_point],right_down_point);}		
+				//右拐的时候 右下拐点先消失
+				else if(left_up_point!=0 && right_up_point!=0 && left_down_point!=0 && right_down_point == 0){
+						Buzzer_On_Count(1);
+						Cross_flag=11;
+						left_draw_line(l_border[left_up_point],left_up_point,l_border[left_down_point],left_down_point);
+						right_up_point_draw_line(r_border[right_up_point],right_up_point);}								
+				//左拐的时候 左下拐点先消失
+				else if(left_up_point!=0 && right_up_point!=0 && left_down_point == 0 && right_down_point !=0){
+						Buzzer_On_Count(1);
+						Cross_flag=12;
+						left_up_point_draw_line(l_border[left_up_point],left_up_point); 
+						right_draw_line(r_border[right_up_point],right_up_point,r_border[right_down_point],right_down_point);}		
+				//上两个拐点存在，下两个拐点消失，十字进行中
+				else if(left_up_point!=0 && right_up_point!=0 && left_down_point == 0 && right_down_point ==0){
+						Buzzer_On_Count(1);
+						Cross_flag=2;
+						left_up_point_draw_line (l_border[left_up_point] ,left_up_point); 
+						right_up_point_draw_line(r_border[right_up_point],right_up_point);}								
+				//四个拐点都消失，出十字
+				else if(left_up_point==0 && right_up_point==0 && left_down_point == 0 && right_down_point ==0){
+						Buzzer_On_Count(1);
+						Cross_flag=0;
 				}
+//以下是八邻域爬线存在的找线问题
+//********左上方拐点由于圆环导致找不到拐点
+				else if(left_up_point==0 && right_up_point!=0 && left_down_point != 0 && right_down_point !=0){
+						Buzzer_On_Count(1);
+						Cross_flag=3;
+						left_down_point_draw_line (l_border[left_down_point] ,left_down_point);
+						right_draw_line(r_border[right_up_point],right_up_point,r_border[right_down_point],right_down_point);}	
+				//左上方拐点由于圆环导致找不到拐点 若此时为右转弯 右下方拐点先消失
+				else if(left_up_point==0 && right_up_point!=0 && left_down_point != 0 && right_down_point ==0){
+						Buzzer_On_Count(1);
+						Cross_flag=31;
+						left_down_point_draw_line (l_border[left_down_point] ,left_down_point);
+						right_up_point_draw_line(r_border[right_up_point],right_up_point);}								
+				//左上方拐点 由于圆环导致找不到拐点 若此时为左转弯 左下方拐点先消失
+				else if(left_up_point==0 && right_up_point!=0 && left_down_point == 0 && right_down_point !=0){
+						Buzzer_On_Count(1);
+						Cross_flag=32;
+						left_draw_line(l_border[32],32,l_border[119],119);
+						right_draw_line(r_border[right_up_point],right_up_point,r_border[right_down_point],right_down_point);}	
+//********右上方拐点由于圆环导致找不到拐点
+				else if(left_up_point!=0 && right_up_point==0 && left_down_point != 0 && right_down_point !=0){
+						Buzzer_On_Count(1);
+						Cross_flag=4;
+						left_draw_line(l_border[left_up_point],left_up_point,l_border[left_down_point],left_down_point);
+						right_down_point_draw_line (r_border[right_down_point] ,right_down_point);}
+				//右上方拐点由于圆环导致找不到拐点 若此时为左转弯 左下方拐点先消失
+				else if(left_up_point!=0 && right_up_point==0 && left_down_point == 0 && right_down_point !=0){
+						Buzzer_On_Count(1);
+						Cross_flag=41;
+						left_up_point_draw_line (l_border[left_up_point] ,left_up_point); 
+						right_down_point_draw_line (r_border[right_down_point] ,right_down_point);}
+						//右上方拐点由于圆环导致找不到拐点 若此时为右转弯 右下方拐点先消失
+				else if(left_up_point!=0 && right_up_point==0 && left_down_point != 0 && right_down_point ==0){
+						Buzzer_On_Count(1);
+						Cross_flag=42;
+						left_draw_line(l_border[left_up_point],left_up_point,l_border[left_down_point],left_down_point);
+						right_draw_line(r_border[32],32,r_border[119],119);}	
+//八邻域导致的“圆环”十字进行中 承接上面
+//********左上方拐点由于圆环导致找不到拐点 该“特殊十字”进行中 下面两个拐点消失
+				else if(left_up_point==0 && right_up_point!=0 && left_down_point == 0 && right_down_point ==0){
+						Buzzer_On_Count(1);
+						Cross_flag=33;
+						left_draw_line(l_border[32],32,l_border[119],119);
+						right_up_point_draw_line(r_border[right_up_point],right_up_point);}		
+//********右上方拐点由于圆环导致找不到拐点 该“特殊十字”进行中 下面两个拐点消失
+				else if(left_up_point!=0 && right_up_point==0 && left_down_point == 0 && right_down_point ==0){
+						Buzzer_On_Count(1);
+						Cross_flag=43;
+						left_up_point_draw_line (l_border[left_up_point] ,left_up_point); 
+						right_draw_line(r_border[32],32,r_border[119],119);}	
+//显示左右上下拐点
+				ips200_show_string(0, 32,"lu");
+				ips200_show_uint(88, 32,left_up_point, 2);
+				ips200_show_string(0, 48,"ld");
+				ips200_show_uint(88, 48,left_down_point, 2);
+				ips200_show_string(0, 64,"ru");
+				ips200_show_uint(88, 64,right_up_point, 2);
+				ips200_show_string(0, 80,"rd");
+				ips200_show_uint(88, 80,right_down_point, 2);
+//显示当前标志位									
+				ips200_show_string(0, 16,"Cross_flag:");
+				ips200_show_uint(88, 16,Cross_flag, 2);
 		}
 }
 

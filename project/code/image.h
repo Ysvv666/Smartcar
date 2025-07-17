@@ -52,8 +52,6 @@ void ChuJie_Test(uint8 image[MT9V03X_H][MT9V03X_W]);
 void Stop_Test(uint8 image[MT9V03X_H][MT9V03X_W]);
 uint8 Judge_Cross(void);
 
-float Slope_Calculate(uint8 begin, uint8 end, uint8 *border);
-bool calculate_s_i(uint8 start, uint8 end, uint8 *border, float *slope_rate, float *intercept);
 uint8 cross_fill(uint8 image[MT9V03X_H][MT9V03X_W], uint8 *l_border, uint8 *r_border,
                  uint16 total_num_l, uint16 total_num_r, uint16 *dir_l, uint16 *dir_r,
                  uint16(*points_l)[2], uint16(*points_r)[2]);
