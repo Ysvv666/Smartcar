@@ -98,15 +98,16 @@ void image_filter(uint8 image[MT9V03X_H][MT9V03X_W])//形态学滤波，简单�
 {
 		uint16 i, j;
 		uint32 num = 0;
-		for (i = 1; i < MT9V03X_H - 1; i++){
+		for (i = Image_Delete; i < MT9V03X_H - 1; i++){
 				for (j = 1; j < (MT9V03X_W - 1); j++){
-				    //统计八个方向的像素值
+				    //统计八个方向的像素值只滤除白色噪点防止八邻域陷入某个很靠近赛道的白色循环
 						num=image[i-1][j-1]+image[i-1][j]+image[i-1][j+1]
 							 +image[i][j - 1]              +image[i][j + 1]
 							 +image[i+1][j-1]+image[i+1][j]+image[i+1][j+1];
-			      if (num >= threshold_max && image[i][j] == 0){
-								image[i][j] = 255;
-						}
+//			      if (num >= threshold_max && image[i][j] == 0){
+//								image[i][j] = 255;
+//						}
+						//当某白色点周围的八个点 小于等于三个白点 即大于等于五个黑点 时判定为黑点
 						if (num <= threshold_min && image[i][j] == 255)
 						{
 								image[i][j] = 0;
@@ -444,7 +445,7 @@ void search_l_r(uint16 break_flag, uint8 image[MT9V03X_H][MT9V03X_W], uint16 *l_
 						*hightest = (center_r[1] + center_l[1]) >> 1;
 						break;
 				}
-				//左右边界循迹到尽头中点--->终止********************************		
+				//************左/右边界循迹到尽头中点--->左/右边界停止爬线**************
 				if (center_l[0] > 95 && center_l[1] < 60 ){
 						center_l[0] = points_l[l_data_statics - 1][0];//x
 						center_l[1] = points_l[l_data_statics - 1][1];//y
@@ -607,7 +608,7 @@ uint8 Corss_flag=0;
 uint8 Judge_Cross(void){
 		uint8 leftlost=Lost_Right();
 		uint8 rightlost=Lost_Right();
-		if(leftlost>=32 && rightlost>=32)return 1;
+		if(leftlost>=30 && rightlost>=30)return 1;
 		return 0;
 }
 
@@ -626,9 +627,9 @@ void Get_Left_Up_Point(void){
         l_border[i-1]-l_border[i]<=3&&
         l_border[i-2]-l_border[i-1]<=3&&
         l_border[i-3]-l_border[i-2]<=3&&
-        (l_border[i]-l_border[i+2])>=8&&
-        (l_border[i]-l_border[i+3])>=10&&
-        (l_border[i]-l_border[i+4])>=10&&
+        (l_border[i]-l_border[i+2])>=5&&
+        (l_border[i]-l_border[i+3])>=8&&
+        (l_border[i]-l_border[i+4])>=8&&
 				image_copy[i-1][l_border[i]]==0&&//上面是黑色
 				image_copy[i+1][l_border[i]]==255&&//下面是白色
 				image_copy[i][l_border[i]-1]==0&&  //左面是黑色			
@@ -654,9 +655,9 @@ void Get_Left_down_Point(void){
         (l_border[i]-l_border[i+1])<=3&&
         (l_border[i+1]-l_border[i+2])<=3&&
         (l_border[i+2]-l_border[i+3])<=3&&
-        (l_border[i]-l_border[i-3])>=8&&//不从i-1开始防止噪声干扰
-        (l_border[i]-l_border[i-4])>=10&&
-        (l_border[i]-l_border[i-5])>=10&&
+        (l_border[i]-l_border[i-3])>=5&&//不从i-1开始防止噪声干扰
+        (l_border[i]-l_border[i-4])>=8&&
+        (l_border[i]-l_border[i-5])>=8&&
 				image_copy[i][l_border[i]+1]==255&&//右边是白色
 				image_copy[i-1][l_border[i]]==255&&//上面是白色
 				image_copy[i+1][l_border[i]]==255&&//下面是白色
@@ -682,9 +683,9 @@ void Get_Right_Up_Point(void){
 				(r_border[i]-r_border[i-1])<=3&&
 				(r_border[i-1]-r_border[i-2])<=3&&
 				(r_border[i-2]-r_border[i-3])<=3&&
-				r_border[i+2]-r_border[i]>=8 &&
-				r_border[i+3]-r_border[i]>=10&&
-				r_border[i+4]-r_border[i]>=10&&
+				r_border[i+2]-r_border[i]>=5 &&
+				r_border[i+3]-r_border[i]>=8&&
+				r_border[i+4]-r_border[i]>=8&&
 				image_copy[i-1][r_border[i]]==0&&//上面是黑色
 				image_copy[i+1][r_border[i]]==255&&//下面是白色
 				image_copy[i][r_border[i]-1]==255&&  //左面是白色			
@@ -713,7 +714,7 @@ void Get_Right_down_Point(void){
         (r_border[i+1]-r_border[i])<=3&&
         (r_border[i+2]-r_border[i+1])<=3&&
         (r_border[i+3]-r_border[i+2])<=3&&
-        (r_border[i-2]-r_border[i])>=8&&//不从i-1开始防止噪声干扰
+        (r_border[i-2]-r_border[i])>=5&&//不从i-1开始防止噪声干扰
         (r_border[i-3]-r_border[i])>=8&&
         (r_border[i-4]-r_border[i])>=8&&
 				image_copy[i-1][r_border[i]]==255&&//上面是白色
@@ -747,12 +748,12 @@ void left_draw_line(uint8 x1,uint8 y1,uint8 x2,uint8 y2)
         y2=t;
     }
 
-    if(x1>=MT9V03X_W-3)x1=MT9V03X_W-3;
+    if(x1>=186)x1=186;
     else if(x1<=2)x1=2;
     if(y1>=MT9V03X_H-3)y1=MT9V03X_H-3;
     else if(y1<=2)y1=2;
 
-    if(x2>=MT9V03X_W-3)x2=MT9V03X_W-3;
+    if(x2>=186)x2=186;
     else if(x2<=2)x2=2;
     if(y2>=MT9V03X_H-3)y2=MT9V03X_H-3;
     else if(y2<=2)y2=2;
@@ -761,8 +762,8 @@ void left_draw_line(uint8 x1,uint8 y1,uint8 x2,uint8 y2)
     {
         hx=x1+(i-y1)*(x2-x1)/(y2-y1);//使用斜率补线
         //防止补线越界
-        if(hx>=MT9V03X_W-3)hx=MT9V03X_W-3;
-        else if(hx<=2)hx=2;
+        if(hx>=186)hx=186;
+        else if(hx<=1)hx=1;
         l_border[i]=hx;
     }
 }
@@ -940,15 +941,16 @@ void myCross_fill(void){
 										lenthen_l_border(left_up_point-1,MT9V03X_H-2);//左边延长
 										lenthen_r_border(right_up_point-1,MT9V03X_H-2);//右边延长
 								}
+//显示左右上下拐点
 						ips200_show_string(0, 32,"lu");
-						ips200_show_uint(88, 32,left_up_point, 1);
+						ips200_show_uint(88, 32,left_up_point, 2);
 						ips200_show_string(0, 48,"ld");
-						ips200_show_uint(88, 48,left_down_point, 1);
+						ips200_show_uint(88, 48,left_down_point, 2);
 						ips200_show_string(0, 64,"ru");
-						ips200_show_uint(88, 64,right_up_point, 1);
+						ips200_show_uint(88, 64,right_up_point, 2);
 						ips200_show_string(0, 80,"rd");
-						ips200_show_uint(88, 80,right_down_point, 1);
-									
+						ips200_show_uint(88, 80,right_down_point, 2);
+//显示当前标志位									
 						ips200_show_string(0, 16,"Cross_flag:");
 						ips200_show_uint(88, 16,Cross_flag, 2);
 				}
@@ -993,7 +995,7 @@ void image_process(void)
 //二值化图像*************************************************************
   	binarizeImage(image_copy,MT9V03X_W,MT9V03X_H,Best_thrsod);
 //滤波*****************************************************************
-//		image_filter(image_copy);
+		image_filter(image_copy);
 //提取赛道边界\预处理                         __
 		image_draw_rectan(image_copy);//加黑框| |
 //清零*****************************************************************
@@ -1011,27 +1013,27 @@ void image_process(void)
 		}		
 //判断丢线条——即遇到十字****************************************************
 //判断十字并执行补线操作****************************************************
-		myCross_fill();		
+//		myCross_fill();		
 //保护处理**************************************************************	
 		Motor_Protection();//电机过热过快保护
 		ChuJie_Test(image_copy);//出界保护	
 		Stop_Test(image_copy);//斑马线处理
-//显示图像**************************************************************	
-		ips200_show_gray_image(0, Image_Down, (const uint8 *)image_copy, MT9V03X_W, MT9V03X_H, MT9V03X_W, MT9V03X_H, Best_thrsod);
-		for(i=0;i<data_statics_l;i++){//左边界
-				ips200_draw_point(points_l[i][0]+1, points_l[i][1]+Image_Down, RGB565_BLUE);
-		}
-		for(i=0;i<data_statics_r;i++){//右边界
-				ips200_draw_point(points_r[i][0]-1, points_r[i][1]+Image_Down, RGB565_RED);
-		}
+////显示图像**************************************************************	
+//		ips200_show_gray_image(0, Image_Down, (const uint8 *)image_copy, MT9V03X_W, MT9V03X_H, MT9V03X_W, MT9V03X_H, Best_thrsod);
+//		for(i=0;i<data_statics_l;i++){//左边界
+//				ips200_draw_point(points_l[i][0]+1, points_l[i][1]+Image_Down, RGB565_BLUE);
+//		}
+//		for(i=0;i<data_statics_r;i++){//右边界
+//				ips200_draw_point(points_r[i][0]-1, points_r[i][1]+Image_Down, RGB565_RED);
+//		}
 		for(i=0;i< MT9V03X_H-1;i++)
 		{
 				center_line[i]=(l_border[i]+r_border[i])/2;//求中线
-				ips200_draw_point(center_line[i],i+Image_Down, RGB565_GREEN );   //显示起点 显示中线	
-				if(l_border[i]+4>187)l_border[i]=183;
-				if(r_border[i]-4<1)r_border[i]=5;
-				ips200_draw_point(l_border[i]+4,i+Image_Down, RGB565_PURPLE);   //显示起点 显示中线	
-				ips200_draw_point(r_border[i]-4,i+Image_Down, RGB565_PURPLE);   //显示起点 显示中线	
+//				ips200_draw_point(center_line[i],i+Image_Down, RGB565_GREEN );   //显示起点 显示中线	
+//				if(l_border[i]+4>187)l_border[i]=183;
+//				if(r_border[i]-4<1)r_border[i]=5;
+//				ips200_draw_point(l_border[i]+4,i+Image_Down, RGB565_PURPLE);   //显示起点 显示中线	
+//				ips200_draw_point(r_border[i]-4,i+Image_Down, RGB565_PURPLE);   //显示起点 显示中线	
 		}
 //清零***************************************
 		Sum_ZhongZhi  = 0;
@@ -1047,8 +1049,8 @@ void image_process(void)
 		ZhongZhi0=ZhongZhi;//记录上一次中值          加权中值
 //			ZhongZhi=center_line[114];//单点
 //显示中值
-		ips200_show_string (MT9V03X_W,Image_Down,"Middle");
-		ips200_show_uint   (MT9V03X_W,16+Image_Down, ZhongZhi,3);
+//		ips200_show_string (MT9V03X_W,Image_Down,"Middle");
+//		ips200_show_uint   (MT9V03X_W,16+Image_Down, ZhongZhi,3);
 //pid
 		pid_flag=1;          //1时即可进入pid中断输出
 }
