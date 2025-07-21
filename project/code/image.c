@@ -397,21 +397,18 @@ void search_l_r(uint16 break_flag, uint8 image[MT9V03X_H][MT9V03X_W], uint16 *l_
 
 				// 更新左边界中心点：选择Y坐标最小的候选点（向上生长优先）
 				if (candidate_count_l > 0) {
-						center_l[0] = candidates_l[0][0];
-						center_l[1] = candidates_l[0][1];					
-						for (int j = 1; j < candidate_count_l; j++) {
-								if (candidates_l[j][1] < center_l[1]) {
-										if(candidates_l[j][0]!=points_l[l_data_statics-1][0] && candidates_l[j][1]!=points_l[l_data_statics-1][1]
-			              && candidates_l[j][0]!=points_l[l_data_statics-2][0] && candidates_l[j][1]!=points_l[l_data_statics-2][1]
-			              && candidates_l[j][0]!=points_l[l_data_statics-3][0] && candidates_l[j][1]!=points_l[l_data_statics-3][1]
-			              && candidates_l[j][0]!=points_l[l_data_statics-4][0] && candidates_l[j][1]!=points_l[l_data_statics-4][1]
-										){
-												center_l[0] = candidates_l[j][0];
-												center_l[1] = candidates_l[j][1];
-										}
-								}
+						for (int j = 0; j < candidate_count_l; j++) {
+								if((candidates_l[j][0]==points_l[l_data_statics-1][0] && candidates_l[j][1]==points_l[l_data_statics-1][1])||
+									 (candidates_l[j][0]==points_l[l_data_statics-2][0] && candidates_l[j][1]==points_l[l_data_statics-2][1])||
+								   (candidates_l[j][0]==points_l[l_data_statics-3][0] && candidates_l[j][1]==points_l[l_data_statics-3][1])||
+									 (candidates_l[j][0]==points_l[l_data_statics-4][0] && candidates_l[j][1]==points_l[l_data_statics-4][1])){
+										continue;
+								}else{
+										center_l[0] = candidates_l[j][0];
+										center_l[1] = candidates_l[j][1];
+								}								
 						}
-				} 
+				} 		
 				else{
 						// 没有找到候选点，回溯
 						if (l_data_statics > 1) {
@@ -425,22 +422,18 @@ void search_l_r(uint16 break_flag, uint8 image[MT9V03X_H][MT9V03X_W], uint16 *l_
 
 				// 更新右边界中心点
 				if (candidate_count_r > 0) {
-						center_r[0] = candidates_r[0][0];
-						center_r[1] = candidates_r[0][1];
-						
-						for (int j = 1; j < candidate_count_r; j++) {
-								if (candidates_r[j][1] < center_r[1]) {
-										if(candidates_r[j][0]!=points_r[r_data_statics-1][0] && candidates_r[j][1]!=points_r[r_data_statics-1][1]
-			              && candidates_r[j][0]!=points_r[r_data_statics-2][0] && candidates_r[j][1]!=points_r[r_data_statics-2][1]
-			              && candidates_r[j][0]!=points_r[r_data_statics-3][0] && candidates_r[j][1]!=points_r[r_data_statics-3][1]
-			              && candidates_r[j][0]!=points_r[r_data_statics-4][0] && candidates_r[j][1]!=points_r[r_data_statics-4][1]
-										){
-												center_r[0] = candidates_r[j][0];
-												center_r[1] = candidates_r[j][1];
-										}
-								}
+						for (int j = 0; j < candidate_count_r; j++) {
+								if((candidates_r[j][0]==points_r[r_data_statics-1][0] && candidates_r[j][1]==points_r[r_data_statics-1][1])||
+									 (candidates_r[j][0]==points_r[r_data_statics-2][0] && candidates_r[j][1]==points_r[r_data_statics-2][1])||
+								   (candidates_r[j][0]==points_r[r_data_statics-3][0] && candidates_r[j][1]==points_r[r_data_statics-3][1])||
+									 (candidates_r[j][0]==points_r[r_data_statics-4][0] && candidates_r[j][1]==points_r[r_data_statics-4][1])){
+										continue;
+								}else{
+										center_r[0] = candidates_r[j][0];
+										center_r[1] = candidates_r[j][1];
+								}								
 						}
-				} 
+				} 		
 				else {
 						// 没有找到候选点，回溯
 						if (r_data_statics > 1) {
@@ -682,7 +675,7 @@ uint8 left_up_point=0;
 void Get_Left_Up_Point(void){
 		left_up_point=0;
 		uint8 i=0;
-		for(int i=32+6;i<120-4;i++){
+		for(int i=32+7;i<120-4;i++){
         //点i下面2个连续相差不大并且点i与上面边3个点分别相差很大，认为有上左拐点
         if(left_up_point==0&&
         l_border[i-1]-l_border[i]<=3&&
@@ -712,7 +705,7 @@ uint8 left_down_point=0;
 void Get_Left_down_Point(void){
 		left_down_point=0;
 		uint8 i=0;
-		for(int i=119-5;i>left_up_point+4;i--){
+		for(int i=119-7;i>left_up_point+4;i--){
         //点i下面2个连续相差不大并且点i与上面边3个点分别相差很大，认为有上左拐点
         if(left_down_point==0&&
         (l_border[i]-l_border[i+1])<=3&&
@@ -741,7 +734,7 @@ uint8 right_up_point=0;
 void Get_Right_Up_Point(void){
 		right_up_point=0;
 		uint8 i=0;
-		for(int i=32+6;i<120-4;i++){
+		for(int i=32+7;i<120-4;i++){
         if(right_up_point==0&&
 				(r_border[i]-r_border[i-1])<=3&&
 				(r_border[i-1]-r_border[i-2])<=3&&
@@ -773,7 +766,7 @@ uint8 right_down_point=0;
 void Get_Right_down_Point(void){
 		right_down_point=0;
 		uint8 i=0;
-		for(int i=119-5;i>right_up_point+4;i--){
+		for(int i=119-7;i>right_up_point+4;i--){
         //点i下面2个连续相差不大并且点i与上面边3个点分别相差很大，认为有上左拐点
         if(right_down_point==0&&
         (r_border[i+1]-r_border[i])<=3&&
@@ -980,7 +973,7 @@ void left_down_point_draw_line (uint8 x1,uint8 y1){
     uint8 hx;
 		uint8 i;
 		float k;
-		k=Slope_Calculate(left_down_point,left_down_point+10, l_border);
+		k=Slope_Calculate(left_down_point,left_down_point+7, l_border);
 //防止输入越界
     if(x1>=186)x1=186;
     else if(x1<=2)x1=2;
@@ -1006,7 +999,7 @@ void right_down_point_draw_line (uint8 x1,uint8 y1){
     uint8 hx;
 		uint8 i;
 		float k;
-		k=Slope_Calculate(right_down_point,right_down_point+10, r_border);
+		k=Slope_Calculate(right_down_point,right_down_point+7, r_border);
 //防止输入越界
     if(x1>=186)x1=186;
     else if(x1<=2)x1=2;
@@ -1155,25 +1148,7 @@ uint8	Judge_ZhiXian(uint8 *border){
   * @retval 无
   */
 
-uint8 Left_Circle_Flag=0;
-uint8 Right_Circle_Flag=0;
-void Judge_Circle(void){
-		uint8 leftlost=Lost_Left();
-		uint8 rightlost=Lost_Right();
-		if(leftlost>=30){//左边丢线 可能是左环岛或者左弯道
-				if(Judge_ZhiXian(r_border)==1){//如果右边是直道 说明是左圆环
-						Left_Circle_Flag=1;
-//						Buzzer_On_Count(1);
-				}
-		}
-		if(rightlost>=30){//右边丢线 可能是右环岛或者右弯道
-				if(Judge_ZhiXian(l_border)==1){//如果左边是直道 说明是右圆环
-						Right_Circle_Flag=1;
-//						Buzzer_On_Count(1);
-				}
-		}
 
-}
 /**                    
   * @brief 找左圆环圆环最右端
   * @param 无
@@ -1185,12 +1160,12 @@ void Get_Left_Circle_Point(void){
 		uint8 i=0;
 		for(int i=119-5;i>32+5;i--){
         if(left_circle_point==0&&
-        (l_border[i]-l_border[i+2])>=0&&
+        (l_border[i]-l_border[i+2])>0&&
         (l_border[i]-l_border[i+3])>=0&&
         (l_border[i]-l_border[i+4])>=0&&
         (l_border[i]-l_border[i-2])>=0&&
         (l_border[i]-l_border[i-3])>=0&&
-        (l_border[i]-l_border[i-4])>=0&&
+        (l_border[i]-l_border[i-4])>0&&
 				image_copy[i][l_border[i]-3]==0&&//左边是黑色	
 				image_copy[i][l_border[i]+3]==255//右边是白色
 				){           
@@ -1206,17 +1181,17 @@ void Get_Left_Circle_Point(void){
   * @retval 无
   */
 uint8 right_circle_point=0;
-void Get_Right_Circle_Point(void){
+void Get_Right_Circle_Point(uint8 a,uint8 b){//a>b
 		right_circle_point=0;
 		uint8 i=0;
-		for(int i=119-5;i>32+5;i--){
+		for(int i=a-5;i>b+5;i--){
         if(right_circle_point==0&&
         (r_border[i]-r_border[i+2])<=0&&
         (r_border[i]-r_border[i+3])<=0&&
-        (r_border[i]-r_border[i+4])<=0&&
+        (r_border[i]-r_border[i+4])<0&&
         (r_border[i]-r_border[i-2])<=0&&
         (r_border[i]-r_border[i-3])<=0&&
-        (r_border[i]-r_border[i-4])<=0&&
+        (r_border[i]-r_border[i-4])<0&&
 				image_copy[i][r_border[i]-3]==255&&//左边是白色			
 				image_copy[i][r_border[i]+3]==0    //右边是黑色
 				){           
@@ -1225,13 +1200,35 @@ void Get_Right_Circle_Point(void){
         }
 		}
 }
+uint8 Left_Circle_Flag=0;
+uint8 Right_Circle_Flag=0;
+uint8 Left_Circle_Status=0;
+uint8 Right_Circle_Status=0;
+void Judge_Circle(void){
+		uint8 leftlost=Lost_Left();
+		uint8 rightlost=Lost_Right();
+		if(leftlost>=30 && rightlost<=5){//左边丢线 可能是左环岛或者左弯道
+				if(Judge_ZhiXian(r_border)==1){//如果右边是直道 说明是左圆环
+						Left_Circle_Flag=1;
+						Left_Circle_Status=1;
+//						Buzzer_On_Count(1);
+				}
+		}
+		if(rightlost>=30 && leftlost<=5){//右边丢线 可能是右环岛或者右弯道
+				if(Judge_ZhiXian(l_border)==1){//如果左边是直道 说明是右圆环
+						Right_Circle_Flag=1;
+						Right_Circle_Status=1;
+//						Buzzer_On_Count(1);
+				}
+		}
+
+}
 /**                    
   * @brief 圆环状态
   * @param 无
   * @retval 无
   */
-uint8 Left_Circle_Status=0;
-uint8 Right_Circle_Status=0;
+
 void myCircle_fill(void){
 		if(Right_Circle_Flag==0 && Left_Circle_Flag==0){
 				Left_Circle_Status=0;
@@ -1240,11 +1237,10 @@ void myCircle_fill(void){
 		}
 //进入右圆环
 		if(Right_Circle_Flag==1){
-					uint8 Right_Circle_Status=1;//设置右圆环状态标志位
 					switch(Right_Circle_Status){//这里的switch函数主要用于判断进入下一状态的标志元素，判断到了就进入下一元素
 							case 1://第一阶段 识别到圆环 补线挡路
 									Get_Right_down_Point();//找右下拐点
-									Get_Right_Circle_Point();//找到黑色圆圈最左端
+									Get_Right_Circle_Point(right_down_point,32);//找到黑色圆圈最左端
 									if(right_down_point==0 && right_circle_point!=0)
 									Right_Circle_Status=2;break;//直到右下拐点消失,右上黑色圆圈最左端出现 进入第二状态
 							case 2://第二阶段 右下拐点消失 依旧补线挡路
@@ -1278,19 +1274,19 @@ void myCircle_fill(void){
 				ips200_show_uint(88, 32,left_up_point, 2);
 				ips200_show_string(0, 48,"left_down:");
 				ips200_show_uint(88, 48,left_down_point, 2);
-				ips200_show_string(0, 64,"right_up:");
-				ips200_show_uint(88, 64,right_up_point, 2);
-				ips200_show_string(0, 80,"right_down:");
-				ips200_show_uint(88, 80,right_down_point, 2);				
-				ips200_show_string(0, 96,"r_cir_p:");
-				ips200_show_uint(88, 96,right_circle_point, 2);
-				ips200_show_string(0, 112,"l_cir_p:");
-				ips200_show_uint(88, 112,left_circle_point, 2);
+				ips200_show_string(120, 32,"right_up:");
+				ips200_show_uint(208, 32,right_up_point, 2);
+				ips200_show_string(120, 48,"right_down:");
+				ips200_show_uint(208, 48,right_down_point, 2);				
+				ips200_show_string(0, 64,"l_cir_p:");
+				ips200_show_uint(88, 64,left_circle_point, 2);
+				ips200_show_string(120, 64,"r_cir_p:");
+				ips200_show_uint(208, 64,right_circle_point, 2);
 //显示当前标志位		
 				ips200_show_string(0, 0,"Circle_Flag:");
 				ips200_show_uint(96, 0,Right_Circle_Flag, 1);					
 				ips200_show_string(0, 16,"Circle_Status:");
-				ips200_show_uint(88, 16,Right_Circle_Status, 2);
+				ips200_show_uint(112, 16,Right_Circle_Status, 2);
 		}else{//出圆环的时候
 				ips200_show_string(0, 0,"Circle_Flag:");
 				ips200_show_uint(96, 0,Right_Circle_Flag, 1);
@@ -1304,7 +1300,7 @@ void myCircle_fill(void){
 				Buzzer_On_Count(1);
 		}
 		if(Right_Circle_Status==2){ 
-				Get_Right_Circle_Point();//找到黑色圆圈最左端
+				Get_Right_Circle_Point(right_down_point-1,32);//找到黑色圆圈最左端
 				right_draw_line(r_border[right_circle_point],right_circle_point,r_border[115],115);//直接从这个点拉到右道路右下角挡路
 				Buzzer_On_Count(1);		
 		}
