@@ -1,15 +1,15 @@
 #include "zf_common_headfile.h"
-#define Target_Speed  1400.0f
+#define Target_Speed  1100.0f
 
 //转向环Turn_t
 PID_t Turn_t = {					//外环PID结构体变量，定义的时候同时给部分成员赋初值
 //误差三次平滑式PID
-	.Kpa = 0.069f, 	  			  //比例项权重（0.004f）
-	.Kpb = 23.2f, 	  			  //比例项权重（18.0f）
-//	.Kpb = 45.5f, 	  			  //比例项权重（18.0f）
-	.Kd  = 1.25f,					    //角速度误差系数
-	.OutMax = 7800,				  //PID_Out输出限幅的最大值
-	.OutMin =-7800,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
+	.Kp5 = 0.005f, 	  			  //比例项权重（0.004f）
+	.Kpa = 0.045f, 	  			  //比例项权重（0.004f）
+	.Kpb = 13.0f, 	  			  //比例项权重（18.0f）
+	.Kd  = 1.65f,					    //角速度误差系数
+	.OutMax = 2300,				  //PID_Out输出限幅的最大值
+	.OutMin =-2300,			  	//PID_Out输出限幅的最小值,一定要和最大值一样哦！！！
 	.Target = 94,         	//目标值
 };
 //角速度环Gyro_t

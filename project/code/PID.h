@@ -11,6 +11,7 @@ typedef struct {
 	float Out1;
 	
 	float Kp;
+	float Kp5;
 	float Kpa;
 	float Kpb;
 	float Ki;

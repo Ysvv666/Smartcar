@@ -54,7 +54,8 @@ void PID_Three_Update(PID_t *p)
 		p->Error1 = p->Error0;			
 		p->Error0 = p->Target - p->Actual;	
 //pid输出计算************************************
-		p->Out  = p->Kpa * (p->Error0*p->Error0*p->Error0)
+		p->Out  = p->Kp5 * (p->Error0*p->Error0*p->Error0*p->Error0*p->Error0)
+					 +  p->Kpa * (p->Error0*p->Error0*p->Error0)
 					 +  p->Kpb *  p->Error0
 					 +  p->Kd	 * (-(mpu6050_gyro_z+8));//这一次pid输出
 //输出限幅***************************************

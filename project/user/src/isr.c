@@ -120,8 +120,8 @@ void TIM6_IRQHandler (void)
 		en_location2+=(-encoder2);//-是因为极性问题
 		encoder_clear_count(TIM4_ENCODER);
 //************************************
-		Speed_l.Actual=en_speed1;
-		Speed_r.Actual=en_speed2;
+		Speed_l.Actual=(en_speed1+en_speed2)/2;
+		Speed_r.Actual=(en_speed1+en_speed2)/2;
 //				float Handle_Speed=HandleSpeed(ZhongZhi);//直道1800，弯道降速到900
 //				Speed_l.Target=Handle_Speed;
 //				Speed_r.Target=Handle_Speed;
