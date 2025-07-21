@@ -1142,7 +1142,7 @@ void myCross_fill(void){
   */
 uint8	Judge_ZhiXian(uint8 *border){
 		uint8 i=0;
-		for(i=96;i>86;i++){
+		for(i=96;i>86;i--){
 				if(my_abs(border[i]-border[i-32])>32){
 						return 0;//变化大 弯道
 				}
@@ -1160,18 +1160,19 @@ uint8 Right_Circle_Flag=0;
 void Judge_Circle(void){
 		uint8 leftlost=Lost_Left();
 		uint8 rightlost=Lost_Right();
-		if(leftlost>=30 || rightlost<=5 ){//左边丢线 可能是左环岛或者左弯道
+		if(leftlost>=30){//左边丢线 可能是左环岛或者左弯道
 				if(Judge_ZhiXian(r_border)==1){//如果右边是直道 说明是左圆环
 						Left_Circle_Flag=1;
 //						Buzzer_On_Count(1);
 				}
 		}
-		if(leftlost<=5  || rightlost>=30){//右边丢线 可能是右环岛或者右弯道
+		if(rightlost>=30){//右边丢线 可能是右环岛或者右弯道
 				if(Judge_ZhiXian(l_border)==1){//如果左边是直道 说明是右圆环
 						Right_Circle_Flag=1;
 //						Buzzer_On_Count(1);
 				}
 		}
+
 }
 /**                    
   * @brief 找左圆环圆环最右端
@@ -1300,23 +1301,23 @@ void myCircle_fill(void){
 		if(Right_Circle_Status==1){
 				Get_Right_down_Point();//找右下拐点				
 				right_down_point_draw_line (r_border[right_down_point] ,right_down_point);//拉线挡路
-//				Buzzer_On_Count(1);
+				Buzzer_On_Count(1);
 		}
 		if(Right_Circle_Status==2){ 
 				Get_Right_Circle_Point();//找到黑色圆圈最左端
 				right_draw_line(r_border[right_circle_point],right_circle_point,r_border[115],115);//直接从这个点拉到右道路右下角挡路
-//				Buzzer_On_Count(1);		
+				Buzzer_On_Count(1);		
 		}
 		if(Right_Circle_Status==3){ 
 				Get_Right_Up_Point();//switch找到右上拐点,那我也得赶紧找出来然后拉线入环！！
 				right_draw_line(r_border[right_up_point],right_up_point,l_border[115],115);//直接从这个点拉到左道路右下角
-//				Buzzer_On_Count(1);
+				Buzzer_On_Count(1);
 		
 		}
 		if(Right_Circle_Status==4){ 
 				Get_Left_Up_Point();//switch状态机发现右上拐点消失 左上拐点出现，那我就拉左拐点入环！！！
 				left_draw_line(l_border[left_up_point],left_up_point,l_border[115],115);//直接从这个点拉到左道路右下角
-//				Buzzer_On_Count(1);
+				Buzzer_On_Count(1);
 		
 		}
 		if(Right_Circle_Status==5){
@@ -1327,17 +1328,17 @@ void myCircle_fill(void){
 		if(Right_Circle_Status==6){//拉线出环
 				Get_Left_down_Point();
 				left_down_point_draw_line (l_border[left_down_point] ,left_down_point);//拉线
-//				Buzzer_On_Count(1);
+				Buzzer_On_Count(1);
 		
 		}
 		if(Right_Circle_Status==7){//拉线出环
 				left_draw_line(120,32,1,115);//直接从这个点拉到左道路右下角		
-//				Buzzer_On_Count(1);	
+				Buzzer_On_Count(1);	
 		}
 		if(Right_Circle_Status==8){//发现右上拐点补线出环
 				Get_Right_Up_Point();
 				right_up_point_draw_line(r_border[right_up_point] ,right_up_point);//拉线
-//				Buzzer_On_Count(1);
+				Buzzer_On_Count(1);
 		
 		}
 
@@ -1436,25 +1437,29 @@ void image_process(void)
 				myCross_fill();		
 		}
 //判断圆环并补线**********************************************************
-//		if(Cross_flag==0){//防止进入十字误判圆环 十字其实也不容易误判圆环 额。。。好吧可能角度问题也会误判圆环的
-//				myCircle_fill();
-//		}
+		if(Cross_flag==0){//防止进入十字误判圆环 十字其实也不容易误判圆环 额。。。好吧可能角度问题也会误判圆环的
+				myCircle_fill();
+		}
 //保护处理**************************************************************	
 		Motor_Protection();//电机过热过快保护
 		ChuJie_Test(image_copy);//出界保护	
 		Stop_Test(image_copy);//斑马线处理
 ////显示图像**************************************************************	
-//		ips200_show_gray_image(0, Image_Down, (const uint8 *)image_copy, MT9V03X_W, MT9V03X_H, MT9V03X_W, MT9V03X_H, Best_thrsod);
-//		for(i=0;i<data_statics_l;i++){//左边界
-//				ips200_draw_point(points_l[i][0]+1, points_l[i][1]+Image_Down, RGB565_BLUE);
-//		}
-//		for(i=0;i<data_statics_r;i++){//右边界
-//				ips200_draw_point(points_r[i][0]-1, points_r[i][1]+Image_Down, RGB565_RED);
-//		}
+		ips200_show_gray_image(0, Image_Down, (const uint8 *)image_copy, MT9V03X_W, MT9V03X_H, MT9V03X_W, MT9V03X_H, Best_thrsod);
+		for(i=0;i<data_statics_l;i++){//左边界
+				ips200_draw_point(points_l[i][0]+1, points_l[i][1]+Image_Down, RGB565_BLUE);
+		}
+		for(i=0;i<data_statics_r;i++){//右边界
+				ips200_draw_point(points_r[i][0]-1, points_r[i][1]+Image_Down, RGB565_RED);
+		}
 		for(i=0;i< MT9V03X_H-1;i++)
 		{			
 				center_line[i]=(l_border[i]+r_border[i])/2;//求中线
-//				ips200_draw_point(center_line[i], i+Image_Down, RGB565_GREEN);
+				ips200_draw_point(center_line[i], i+Image_Down, RGB565_GREEN);
+				if(l_border[i]+4>187)l_border[i]=183;
+				if(r_border[i]-4<1)r_border[i]=5;
+				ips200_draw_point(l_border[i]+4,i+Image_Down, RGB565_PURPLE);   //显示起点 显示中线	
+				ips200_draw_point(r_border[i]-4,i+Image_Down, RGB565_PURPLE);   //显示起点 显示中线	
 		}
 //清零***************************************
 //		Sum_ZhongZhi  = 0;
@@ -1472,7 +1477,7 @@ void image_process(void)
 //单点中值
 //			ZhongZhi=center_line[114];//单点
 //多点平均中值
-		ZhongZhi=(uint8_t)((center_line[75]));//互补滤波得到输出中值
+		ZhongZhi=(uint8_t)((center_line[92]));//互补滤波得到输出中值
 //显示中值
 //		ips200_show_string (MT9V03X_W,Image_Down,"Middle");
 //		ips200_show_uint   (MT9V03X_W,16+Image_Down, ZhongZhi,3);

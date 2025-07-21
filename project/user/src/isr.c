@@ -53,7 +53,7 @@ void TIM2_IRQHandler (void)
 void TIM3_IRQHandler (void)
 {
     // 此处编写用户代码
-//编码器模式
+		//编码器模式
     // 此处编写用户代码
     TIM3->SR &= ~TIM3->SR;                                                      // 清空中断状态
 }
@@ -65,7 +65,7 @@ void TIM3_IRQHandler (void)
 void TIM4_IRQHandler (void)
 {
     // 此处编写用户代码
-//编码器模式
+		//编码器模式
     // 此处编写用户代码
     TIM4->SR &= ~TIM4->SR;                                                      // 清空中断状态
 }
@@ -120,8 +120,6 @@ void TIM6_IRQHandler (void)
 		en_location2+=(-encoder2);//-是因为极性问题
 		encoder_clear_count(TIM4_ENCODER);
 //************************************
-//		Speed_l.Actual=(en_speed1+en_speed2)/2;
-//		Speed_r.Actual=(en_speed1+en_speed2)/2;
 		Speed_l.Actual=en_speed1;
 		Speed_r.Actual=en_speed2;
 //				float Handle_Speed=HandleSpeed(ZhongZhi);//直道1200，弯道降速到900
