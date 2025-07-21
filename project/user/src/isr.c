@@ -120,9 +120,11 @@ void TIM6_IRQHandler (void)
 		en_location2+=(-encoder2);//-是因为极性问题
 		encoder_clear_count(TIM4_ENCODER);
 //************************************
-		Speed_l.Actual=(en_speed1+en_speed2)/2;
-		Speed_r.Actual=(en_speed1+en_speed2)/2;
-//				float Handle_Speed=HandleSpeed(ZhongZhi);//直道1800，弯道降速到900
+//		Speed_l.Actual=(en_speed1+en_speed2)/2;
+//		Speed_r.Actual=(en_speed1+en_speed2)/2;
+		Speed_l.Actual=en_speed1;
+		Speed_r.Actual=en_speed2;
+//				float Handle_Speed=HandleSpeed(ZhongZhi);//直道1200，弯道降速到900
 //				Speed_l.Target=Handle_Speed;
 //				Speed_r.Target=Handle_Speed;
 		PID_Position_Update(&Speed_l);	
@@ -175,7 +177,7 @@ void TIM7_IRQHandler (void)
 				count1=0;
 		}
 //1msPID输出
-		if(YueJie_flag==0 && Motor_Protection_flag==0 && Buzzer_Stop_flag==0){  //正常循迹4
+		if(YueJie_flag==0 && Motor_Protection_flag==0 && Buzzer_Stop_flag==0){  //正常循迹
 		//串级PID
 				Left_PWM_Out =Speed_l.Out - Turn_t.Out ;
 				Right_PWM_Out=Speed_r.Out + Turn_t.Out ;

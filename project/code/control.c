@@ -67,16 +67,16 @@ void Motor_Protection(void)
 float HandleSpeed(uint8_t Zhongzhi) {
     int error = abs(Zhongzhi - 94);
     
-    // 二次函数系数，满足 f(0)=1600, f(7)=950, 开口向下
-    float a = -13.2653f;  // 二次项系数
-    float b = 13.7755f;   // 一次项系数
-    float c = 1600.0f;    // 常数项
+    // 二次函数系数，满足 f(0)=1200, f(10)=850, 开口向下
+    float a = -1.0f;     // 二次项系数
+    float b = -25.0f;    // 一次项系数
+    float c = 1200.0f;   // 常数项
     
-    // 计算二次函数: f(error) = -13.2653*error² + 13.7755*error + 1600
+    // 计算二次函数: f(error) = -1.0*error² - 25.0*error + 1200
     float speed = a * error * error + b * error + c;
     
     // 限制最小速度为400
-    if (speed < 400) speed = 400.0f;
+    if (speed < 400) speed =400.0f;
     
     return speed;
 }
